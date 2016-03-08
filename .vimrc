@@ -6,11 +6,12 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
-Plug 'vim-scripts/a.vim'
+Plug 'vim-scripts/a.vim', {'for': 'cpp'}
 " Plug 'justincampbell/vim-eighties'
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'FelikZ/ctrlp-py-matcher'
 Plug 'easymotion/vim-easymotion'
@@ -23,6 +24,13 @@ Plug 'unblevable/quick-scope'
 " Plug 'scrooloose/syntastic'
 " Plug 'Valloric/YouCompleteMe', {'do': './install.py' }
 call plug#end()
+
+"**************************************
+" Important globals
+"**************************************
+" Leader key is space
+let mapleader = "\<Space>"
+
 "**************************************
 " Quick Scope
 "**************************************
@@ -45,7 +53,6 @@ let g:airline#extensions#tabline#enabled = 1
 " EasyMotion
 "**************************************
 " map <Leader><Leader> <Plug>(easymotion-prefix)
-
 "**************************************
 " Solarized Color
 "**************************************
@@ -55,8 +62,16 @@ colorscheme solarized
 "**************************************
 " a.vim
 "**************************************
-map <Leader><Tab>  :A<cr>
+nnoremap <Leader>a  :A<cr>
+" a.vim has some really dumb mappings that we need to remove, but we need
+" to wait until vim has loaded to unmap them
+autocmd VimEnter :iunmap <Space>ihn
+autocmd VimEnter :iunmap <Space>is
+autocmd VimEnter :iunmap <Space>ih
 
+autocmd VimEnter :nunmap <Space>ihn
+autocmd VimEnter :nunmap <Space>is
+autocmd VimEnter :nunmap <Space>ih
 "**************************************
 " vim-tmux-navigator
 "**************************************
@@ -79,7 +94,8 @@ let g:ctrlp_custom_ignore = {
     \ 'dir': 'work/ecos2\|'
     \ . 'work/hst/targets\|'
     \ . 'work/epic\|'
-    \ . '^mts\.' ,
+    \ . '^mts\.\|'
+    \ . '^mts-\d\d\d\d' ,
     \ 'file': '\.a$' ,
     \ }
 let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
@@ -87,13 +103,18 @@ let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
 " NERDTree
 "**************************************
 
+let NERDTreeShowHidden=1
+
 " Automatically open NERDTree
-autocmd vimenter * NERDTree
-autocmd vimenter * wincmd p
+" autocmd vimenter * NERDTree
+" autocmd vimenter * wincmd p
 
 " Quit vim if NERDTree is the only buffer
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
+
+nnoremap <Leader>f :NERDTreeFind<CR>
+nnoremap <Leader>m :NERDTreeToggle<CR>
 "**************************************
 " vim-indent-guides
 "**************************************
@@ -112,8 +133,11 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 "**************************************
 " Vim settings
 "**************************************
-
-:set colorcolumn=80
+" autocomplete in the command menu
+set wildmenu
+" automatically re-read changed files
+set autoread
+set colorcolumn=80
 
 " 4 spaces for indentation
 set tabstop=4
@@ -187,8 +211,6 @@ noremap <silent> <C-S>          :update<CR>
 vnoremap <silent> <C-S>         <C-C>:update<CR>
 inoremap <silent> <C-S>         <C-O>:update<CR>
 
-" Leader key is space
-let mapleader = "\<Space>"
 
 " Highlight our current line
 set cursorline
@@ -202,7 +224,8 @@ set ttyfast
 nnoremap <Leader>n :bnext<CR>
 nnoremap <Leader>p :bprevious<CR>
 nnoremap <Leader>w :w<CR>
-nnoremap <Leader>q :q<CR>
 
+"close the buffer without killing the split
+nnoremap <Leader>q :b#<bar>bd#<CR>
 " kill that stupid window that pops up
 map q: :q
