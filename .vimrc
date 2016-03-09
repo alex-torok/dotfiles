@@ -6,10 +6,11 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
-Plug 'vim-scripts/a.vim', {'for': 'cpp'}
+Plug 'vim-scripts/a.vim'
 " Plug 'justincampbell/vim-eighties'
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'mbbill/undotree'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -65,13 +66,13 @@ colorscheme solarized
 nnoremap <Leader>a  :A<cr>
 " a.vim has some really dumb mappings that we need to remove, but we need
 " to wait until vim has loaded to unmap them
-autocmd VimEnter :iunmap <Space>ihn
-autocmd VimEnter :iunmap <Space>is
-autocmd VimEnter :iunmap <Space>ih
+autocmd VimEnter * :iunmap <Space>ihn
+autocmd VimEnter * :iunmap <Space>is
+autocmd VimEnter * :iunmap <Space>ih
 
-autocmd VimEnter :nunmap <Space>ihn
-autocmd VimEnter :nunmap <Space>is
-autocmd VimEnter :nunmap <Space>ih
+autocmd VimEnter * :nunmap <Space>ihn
+autocmd VimEnter * :nunmap <Space>is
+autocmd VimEnter * :nunmap <Space>ih
 "**************************************
 " vim-tmux-navigator
 "**************************************
@@ -211,6 +212,8 @@ noremap <silent> <C-S>          :update<CR>
 vnoremap <silent> <C-S>         <C-C>:update<CR>
 inoremap <silent> <C-S>         <C-O>:update<CR>
 
+" Save all
+nnoremap <Leader>w :wa<CR>
 
 " Highlight our current line
 set cursorline
@@ -223,9 +226,29 @@ set ttyfast
 
 nnoremap <Leader>n :bnext<CR>
 nnoremap <Leader>p :bprevious<CR>
-nnoremap <Leader>w :w<CR>
 
 "close the buffer without killing the split
 nnoremap <Leader>q :b#<bar>bd#<CR>
 " kill that stupid window that pops up
 map q: :q
+
+
+" Automatically save after exiting insert mode
+
+"**************************************
+" Persistent undo
+"**************************************
+
+" Put plugins and dictionaries in this dir (also on Windows)
+let vimDir = '$HOME/.vim'
+let &runtimepath.=','.vimDir
+
+" Keep undo history across sessions by storing it in a file
+if has('persistent_undo')
+    let myUndoDir = expand(vimDir . '/undodir')
+    " Create dirs
+    call system('mkdir ' . vimDir)
+    call system('mkdir ' . myUndoDir)
+    let &undodir = myUndoDir
+    set undofile
+endif
