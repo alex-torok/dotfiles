@@ -33,6 +33,10 @@ call plug#end()
 let mapleader = "\<Space>"
 
 "**************************************
+" Undo Tree
+"**************************************
+nnoremap <Leader>u :UndotreeToggle<CR>:UndotreeFocus <CR>
+"**************************************
 " Quick Scope
 "**************************************
 " Trigger a highlight in the appropriate direction when pressing these keys:
