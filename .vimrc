@@ -20,6 +20,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'altercation/vim-colors-solarized'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'unblevable/quick-scope'
+Plug 'djoshea/vim-autoread'
+Plug 'henrik/vim-indexed-search'
 " Plug 'jaxbot/semantic-highlight.vim'
 " Plug 'nathanaelkane/vim-indent-guides'
 " Plug 'scrooloose/syntastic'
@@ -36,6 +38,9 @@ let mapleader = "\<Space>"
 " Undo Tree
 "**************************************
 nnoremap <Leader>u :UndotreeToggle<CR>:UndotreeFocus <CR>
+let g:undotree_SetFocusWhenToggle = 1
+let g:undotree_SetFocusWhenToggle = 1
+let g:undotree_WindowLayout = 2
 "**************************************
 " Quick Scope
 "**************************************
@@ -140,8 +145,7 @@ nnoremap <Leader>m :NERDTreeToggle<CR>
 "**************************************
 " autocomplete in the command menu
 set wildmenu
-" automatically re-read changed files
-set autoread
+
 set colorcolumn=80
 
 " 4 spaces for indentation
