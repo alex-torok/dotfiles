@@ -20,12 +20,6 @@ then
     stty -ixon
 fi
 
-function notify-mbp () {
-    SSH_IP=`echo $SSH_CONNECTION | cut -f1 -d" "`
-    echo $SSH_IP
-    echo $1
-    ssh -o StrictHostKeyChecking=no alextorok@$SSH_IP "hostname | echo; terminal-notifier -title $1 -message $2"
-}
 function parse_git_branch () {
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
