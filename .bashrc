@@ -6,13 +6,16 @@ function parse_git_branch () {
 export PS1="\[$(tput bold)\]\[$(tput setaf 6)\]\t \[$(tput setaf 2)\][\[$(tput setaf 3)\]\u\[$(tput setaf 1)\]@\[$(tput setaf 3)\]\h\[$(tput setaf 7)\]\$(parse_git_branch) \[\033[00m\]\w\[$(tput setaf 2)\]\[$(tput bold)\]]\[$(tput setaf 4)\]\\n\$ \[$(tput sgr0)\]"
 #export PS1="prompt: " 
 # Source global definitions
-if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
-fi
+# if [ -f /etc/bashrc ]; then
+# 	. /etc/bashrc
+# fi
 
 # User specific aliases and functions
-source ~/working-copy/test-farm/test-farm/util/toys/test-farm-helpers
-alias etd='echo $TESTDIR'
+if [ -e ~/working-copy/test-farm/test-farm/util/toys/test-farm-helpers ]
+then
+    source ~/working-copy/test-farm/test-farm/util/toys/test-farm-helpers
+    alias etd='echo $TESTDIR'
+fi
 
 # Add timestamps to the history
 HISTTIMEFORMAT="%d/%m/%y %T "
