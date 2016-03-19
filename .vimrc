@@ -7,9 +7,12 @@ endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'vim-scripts/a.vim'
-" Plug 'justincampbell/vim-eighties'
+" Plug 'scrooloose/syntastic'
+Plug 'justincampbell/vim-eighties'
+
+
+
 Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'mbbill/undotree'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
@@ -22,6 +25,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'unblevable/quick-scope'
 Plug 'djoshea/vim-autoread'
 Plug 'henrik/vim-indexed-search'
+Plug 'moll/vim-bbye'
 " Plug 'jaxbot/semantic-highlight.vim'
 " Plug 'nathanaelkane/vim-indent-guides'
 " Plug 'scrooloose/syntastic'
@@ -34,6 +38,25 @@ call plug#end()
 " Leader key is space
 let mapleader = "\<Space>"
 
+"**************************************
+" Syntastic
+"**************************************
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+" 
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+" " C++
+" let g:syntastic_cpp_compiler_options='-I../include'
+" let g:syntastic_cpp_include_dirs=['../include']
+" let g:syntastic_cpp_check_header=1
+"**************************************
+" vim-bbye
+"**************************************
+:nnoremap <Leader>q :Bdelete<CR>
 "**************************************
 " Undo Tree
 "**************************************
@@ -54,11 +77,11 @@ let g:airline#extensions#tabline#enabled = 1
 "**************************************
 " Eighties (Auto Buffer Resizing)
 "**************************************
-" let g:eighties_enabled = 1
-" let g:eighties_minimum_width = 80
-" let g:eighties_extra_width = 0 " Increase this if you want some extra room
-" let g:eighties_compute = 1 " Disable this if you just want the minimum + extra
-" let g:eighties_bufname_additional_patterns = ['fugitiveblame'] " Defaults to [], 'fugitiveblame' is only an example. Takes a comma delimited list of bufnames as strings.:
+let g:eighties_enabled = 1
+let g:eighties_minimum_width = 80
+let g:eighties_extra_width = 0 " Increase this if you want some extra room
+let g:eighties_compute = 0 " Disable this if you just want the minimum + extra
+let g:eighties_bufname_additional_patterns = ['undotree', 'fugitiveblame'] " Defaults to [], 'fugitiveblame' is only an example. Takes a comma delimited list of bufnames as strings.:
 "**************************************
 " EasyMotion
 "**************************************
@@ -104,9 +127,9 @@ let g:ctrlp_custom_ignore = {
     \ 'dir': 'work/ecos2\|'
     \ . 'work/hst/targets\|'
     \ . 'work/epic\|'
-    \ . '^mts\.\|'
-    \ . '^mts-\d\d\d\d' ,
-    \ 'file': '\.a$' ,
+    \ . 'mts\.\(\d\d\d\d\|module\)' ,
+    \ 'file': '\.\(a\|so\|o\)$\|'
+    \ . 'tar\.\(bz2\|gz\)$',
     \ }
 let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
 "**************************************
@@ -235,8 +258,6 @@ set ttyfast
 nnoremap <Leader>n :bnext<CR>
 nnoremap <Leader>p :bprevious<CR>
 
-"close the buffer without killing the split
-nnoremap <Leader>q :b#<bar>bd#<CR>
 " kill that stupid window that pops up
 map q: :q
 

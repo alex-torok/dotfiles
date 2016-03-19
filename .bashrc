@@ -1,9 +1,29 @@
-# .bashrc
+if tty -s
+then
+    BLACK="\[$(tput setaf 0)\]"
+    RED="\[$(tput setaf 1)\]"
+    GREEN="\[$(tput setaf 2)\]"
+    YELLOW="\[$(tput setaf 3)\]"
+    BLUE="\[$(tput setaf 4)\]"
+    MAGENTA="\[$(tput setaf 5)\]"
+    CYAN="\[$(tput setaf 6)\]"
+    WHITE="\[$(tput setaf 7)\]"
+    LIME_YELLOW="\[$(tput setaf 190)\]"
+    POWDER_BLUE="\[$(tput setaf 153)\]"
+    BOLD="\[$(tput bold)\]"
+    NORMAL="\[$(tput sgr0)\]"
+    BLINK="\[$(tput blink)\]"
+    REVERSE="\[$(tput smso)\]"
+    UNDERLINE="\[$(tput smul)\]"
+fi
+
 function parse_git_branch () {
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
-# Custom bash prompt via kirsle.net/wizards/ps1.html
-export PS1="\[$(tput bold)\]\[$(tput setaf 6)\]\t \[$(tput setaf 2)\][\[$(tput setaf 3)\]\u\[$(tput setaf 1)\]@\[$(tput setaf 3)\]\h\[$(tput setaf 7)\]\$(parse_git_branch) \[\033[00m\]\w\[$(tput setaf 2)\]\[$(tput bold)\]]\[$(tput setaf 4)\]\\n\$ \[$(tput sgr0)\]"
+
+export PS1="${BOLD}\t ${NORMAL}[\u@\h]${BOLD}${WHITE}\$(parse_git_branch) \
+${NORMAL}${GREEN}\w\\n${BOLD}${RED}\$${NORMAL} "
+# .bashrc
 #export PS1="prompt: " 
 # Source global definitions
 # if [ -f /etc/bashrc ]; then
