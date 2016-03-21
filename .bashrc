@@ -21,10 +21,13 @@ then
 fi
 
 function parse_git_branch () {
-  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
+}
+function parse_git_age () {
+git show HEAD --date=relative 2> /dev/null | egrep "^Date:" | cut -d":" -f2 | sed 's/^\s*//' # | sed  's/\(\d+\) \(.\).+/\1/'
 }
 
-export PS1="${BOLD}\t ${NORMAL}[\u@\h]${BOLD}${WHITE}\$(parse_git_branch) \
+export PS1="${BOLD}\t ${NORMAL}[\u@\h] ${BOLD}${WHITE}(\$(parse_git_branch) - \$(parse_git_age)) \
 ${NORMAL}${GREEN}\w\\n${BOLD}${RED}\$${NORMAL} "
 # .bashrc
 #export PS1="prompt: " 
@@ -40,6 +43,22 @@ then
     alias etd='echo $TESTDIR'
 fi
 
+function tags () {
+    #clean older info
+    rm -rf tags
+    rm -rf cscope.files
+    rm -rf cscope.out
+    # generate new info
+    echo "Creating ctags"
+    ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q .
+    echo "Finding files for cscope"
+    find | egrep -i "\.(c|h|cpp)$" > cscope.files
+    echo "Creating cscope"
+    cscope -Rb
+}
+# cpp and h cscope
+alias cppscope='find . | grep -P "\.(cpp|h)$" > cppscope.files && cscope -b -i ./cppscope.files'
+
 # Add timestamps to the history
 HISTTIMEFORMAT="%d/%m/%y %T "
 
@@ -47,9 +66,6 @@ HISTTIMEFORMAT="%d/%m/%y %T "
 alias cd..='cd ..'
 alias ..='cd ..'
 alias remakeTests='./CleanTests.pl;./MakeTests.pl'
-
-# Tmux alias
-alias tmuxa='tmux a set-environment SSH_HOSTNAME $SSH_HOSTNAME'
 
 # Git aliases
 alias gits='git status'
@@ -64,11 +80,6 @@ alias git-authors='git ls-tree -r -z --name-only HEAD -- $1 | xargs -0 -n1 git b
 alias num2ip='~/test-farm-utilities/numToIp.rb'
 alias ip2num='~/test-farm-utilities/ipToNum.rb'
 
-#unit variables
-#unit1='172.17.18.2'
-#unit1='172.17.18.3'
-unit1='10.12.52.134'
-unit2='10.12.52.138'
 alias vnc='vncviewer'
 
 function scpi {

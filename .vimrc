@@ -8,10 +8,9 @@ endif
 call plug#begin('~/.vim/plugged')
 Plug 'vim-scripts/a.vim'
 " Plug 'scrooloose/syntastic'
-Plug 'justincampbell/vim-eighties'
-
-
-
+" Plug 'justincampbell/vim-eighties'
+Plug 'vim-scripts/OmniCppComplete'
+Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree'
 Plug 'mbbill/undotree'
 Plug 'tpope/vim-fugitive'
@@ -37,7 +36,22 @@ call plug#end()
 "**************************************
 " Leader key is space
 let mapleader = "\<Space>"
+"**************************************
+" OmniCppComplete
+"**************************************
+let OmniCpp_NamespaceSearch = 1
+let OmniCpp_GlobalScopeSearch = 1
+let OmniCpp_ShowAccess = 1
+let OmniCpp_MayCompleteDot = 1
+let OmniCpp_MayCompleteArrow = 1
+let OmniCpp_MayCompleteScope = 0
 
+" au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif      
+" set completeopt=menuone,menu,longest,preview
+"**************************************
+" tagbar
+"**************************************
+nnoremap <Leader>t :TagbarToggle<CR>
 "**************************************
 " Syntastic
 "**************************************
@@ -77,11 +91,11 @@ let g:airline#extensions#tabline#enabled = 1
 "**************************************
 " Eighties (Auto Buffer Resizing)
 "**************************************
-let g:eighties_enabled = 1
-let g:eighties_minimum_width = 80
-let g:eighties_extra_width = 0 " Increase this if you want some extra room
-let g:eighties_compute = 0 " Disable this if you just want the minimum + extra
-let g:eighties_bufname_additional_patterns = ['undotree', 'fugitiveblame'] " Defaults to [], 'fugitiveblame' is only an example. Takes a comma delimited list of bufnames as strings.:
+" let g:eighties_enabled = 1
+" let g:eighties_minimum_width = 80
+" let g:eighties_extra_width = 0 " Increase this if you want some extra room
+" let g:eighties_compute = 0 " Disable this if you just want the minimum + extra
+" let g:eighties_bufname_additional_patterns = ['undotree_1','undotree_2','fugitiveblame'] " Defaults to [], 'fugitiveblame' is only an example. Takes a comma delimited list of bufnames as strings.:
 "**************************************
 " EasyMotion
 "**************************************
@@ -166,6 +180,7 @@ nnoremap <Leader>m :NERDTreeToggle<CR>
 "**************************************
 " Vim settings
 "**************************************
+:set spell spelllang=en_us
 " autocomplete in the command menu
 set wildmenu
 
@@ -180,6 +195,8 @@ set softtabstop=4
 set smarttab
 set autoindent
 filetype plugin indent on
+" enable omnicompletion
+set omnifunc=syntaxcomplete#Complete
 
 " Don't warn me when switching buffers
 set hidden
@@ -212,10 +229,10 @@ set number
 " Mouse mode
 set mouse=a
 
-" Highlight search results
-set hlsearch
 " Live search
 set incsearch
+set ignorecase
+set hlsearch
 
 " split views go below or to the right
 set splitright
@@ -281,3 +298,8 @@ if has('persistent_undo')
     let &undodir = myUndoDir
     set undofile
 endif
+
+"**************************************
+" cscope
+"**************************************
+source ~/.cscope_maps.vim
