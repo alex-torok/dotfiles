@@ -110,3 +110,18 @@ alias debugperl='perl -d:Ptkdb'
 #source ${HOME}/nest/config/nest_bashrc
 
 . $HOME/.shellrc.load
+
+
+if tty -s
+then
+if [ -z ${TMUX+x} ]
+then
+    tmux ls
+    if [ $? -eq 0 ]
+    then
+        tmux a
+    else
+        tmux
+    fi
+fi
+fi

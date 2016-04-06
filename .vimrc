@@ -9,7 +9,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'vim-scripts/a.vim'
 " Plug 'scrooloose/syntastic'
 " Plug 'justincampbell/vim-eighties'
-Plug 'vim-scripts/OmniCppComplete'
+" Plug 'vim-scripts/OmniCppComplete'
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree'
 Plug 'mbbill/undotree'
@@ -139,8 +139,10 @@ let g:ctrlp_clear_cache_on_exit=0
 let g:ctrlp_max_files=80000
 let g:ctrlp_custom_ignore = {
     \ 'dir': 'work/ecos2\|'
-    \ . 'work/hst/targets\|'
     \ . 'work/epic\|'
+    \ . 'work/ltib\|'
+    \ . 'work/u-boot-imx6\|'
+    \ . 'work/hst/targets\|'
     \ . 'mts\.\(\d\d\d\d\|module\)' ,
     \ 'file': '\.\(a\|so\|o\)$\|'
     \ . 'tar\.\(bz2\|gz\)$',
@@ -228,6 +230,10 @@ set number
 
 " Mouse mode
 set mouse=a
+if &term =~ '^screen'
+    " tmux knows the extended mouse mode
+    set ttymouse=xterm2
+endif
 
 " Live search
 set incsearch
