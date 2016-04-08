@@ -7,9 +7,6 @@ endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'vim-scripts/a.vim'
-" Plug 'scrooloose/syntastic'
-" Plug 'justincampbell/vim-eighties'
-" Plug 'vim-scripts/OmniCppComplete'
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree'
 Plug 'mbbill/undotree'
@@ -25,7 +22,8 @@ Plug 'unblevable/quick-scope'
 Plug 'djoshea/vim-autoread'
 Plug 'henrik/vim-indexed-search'
 Plug 'moll/vim-bbye'
-" Plug 'jaxbot/semantic-highlight.vim'
+Plug 'rking/ag.vim'
+Plug 'airblade/vim-gitgutter'
 " Plug 'nathanaelkane/vim-indent-guides'
 " Plug 'scrooloose/syntastic'
 " Plug 'Valloric/YouCompleteMe', {'do': './install.py' }
@@ -36,41 +34,22 @@ call plug#end()
 "**************************************
 " Leader key is space
 let mapleader = "\<Space>"
-"**************************************
-" OmniCppComplete
-"**************************************
-let OmniCpp_NamespaceSearch = 1
-let OmniCpp_GlobalScopeSearch = 1
-let OmniCpp_ShowAccess = 1
-let OmniCpp_MayCompleteDot = 1
-let OmniCpp_MayCompleteArrow = 1
-let OmniCpp_MayCompleteScope = 0
 
-" au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif      
-" set completeopt=menuone,menu,longest,preview
+"**************************************
+" Ag
+"**************************************
+let g:ag_working_path_mode="r"
+
 "**************************************
 " tagbar
 "**************************************
 nnoremap <Leader>t :TagbarToggle<CR>
-"**************************************
-" Syntastic
-"**************************************
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-" 
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 0
-" " C++
-" let g:syntastic_cpp_compiler_options='-I../include'
-" let g:syntastic_cpp_include_dirs=['../include']
-" let g:syntastic_cpp_check_header=1
+
 "**************************************
 " vim-bbye
 "**************************************
 :nnoremap <Leader>q :Bdelete<CR>
+
 "**************************************
 " Undo Tree
 "**************************************
@@ -78,6 +57,7 @@ nnoremap <Leader>u :UndotreeToggle<CR>:UndotreeFocus <CR>
 let g:undotree_SetFocusWhenToggle = 1
 let g:undotree_SetFocusWhenToggle = 1
 let g:undotree_WindowLayout = 2
+
 "**************************************
 " Quick Scope
 "**************************************
@@ -88,18 +68,12 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 " Airline
 "**************************************
 let g:airline#extensions#tabline#enabled = 1
-"**************************************
-" Eighties (Auto Buffer Resizing)
-"**************************************
-" let g:eighties_enabled = 1
-" let g:eighties_minimum_width = 80
-" let g:eighties_extra_width = 0 " Increase this if you want some extra room
-" let g:eighties_compute = 0 " Disable this if you just want the minimum + extra
-" let g:eighties_bufname_additional_patterns = ['undotree_1','undotree_2','fugitiveblame'] " Defaults to [], 'fugitiveblame' is only an example. Takes a comma delimited list of bufnames as strings.:
+
 "**************************************
 " EasyMotion
 "**************************************
 " map <Leader><Leader> <Plug>(easymotion-prefix)
+
 "**************************************
 " Solarized Color
 "**************************************
