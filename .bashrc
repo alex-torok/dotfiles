@@ -1,3 +1,8 @@
+fish
+exit
+
+
+
 if tty -s
 then
     BLACK="\[$(tput setaf 0)\]"
@@ -82,6 +87,8 @@ alias ip2num='~/test-farm-utilities/ipToNum.rb'
 
 alias vnc='vncviewer'
 
+alias xvfb='Xvfb :99 & &>/dev/null; export DISPLAY=:99'
+
 function scpi {
     if [ $# -eq 1 ]
     then
@@ -111,17 +118,19 @@ alias debugperl='perl -d:Ptkdb'
 
 . $HOME/.shellrc.load
 
+# 
+# if tty -s
+# then
+# if [ -z ${TMUX+x} ]
+# then
+#     tmux ls
+#     if [ $? -eq 0 ]
+#     then
+#         tmux a
+#     else
+#         tmux
+#     fi
+# fi
+# fi
 
-if tty -s
-then
-if [ -z ${TMUX+x} ]
-then
-    tmux ls
-    if [ $? -eq 0 ]
-    then
-        tmux a
-    else
-        tmux
-    fi
-fi
-fi
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
