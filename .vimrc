@@ -6,27 +6,51 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
+" File Switching
 Plug 'vim-scripts/a.vim'
-Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree'
+" Plug 'ctrlpvim/ctrlp.vim'
+" Plug 'FelikZ/ctrlp-py-matcher'
 Plug 'mbbill/undotree'
-Plug 'tpope/vim-fugitive'
+Plug 'mhinz/vim-startify'
+
+" Searching
+" Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-surround'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'FelikZ/ctrlp-py-matcher'
+Plug 'tpope/vim-commentary'
 Plug 'easymotion/vim-easymotion'
+
+" External Integrations
+Plug 'tpope/vim-fugitive'
+" Plug 'airblade/vim-gitgutter'
+
+" Look & Feel
+" Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'altercation/vim-colors-solarized'
+Plug 'vim-utils/vim-troll-stopper' "Highlight characters that arent as they appear
+" Plug 'nathanaelkane/vim-indent-guides'
+
+" Tmux-Related Integrations
+Plug 'benmills/vimux'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'unblevable/quick-scope'
+
+" Basic Enhancements
 Plug 'djoshea/vim-autoread'
+Plug 'unblevable/quick-scope'
 Plug 'henrik/vim-indexed-search'
 Plug 'moll/vim-bbye'
-Plug 'rking/ag.vim'
-Plug 'airblade/vim-gitgutter'
-" Plug 'nathanaelkane/vim-indent-guides'
+" Plug 'rking/ag.vim'
+Plug 'vim-scripts/vim-auto-save'
+
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --bin' }
+" Plug 'junegunn/fzf.vim'
+
+" Syntax Checking and Auto-complete
 " Plug 'scrooloose/syntastic'
 " Plug 'Valloric/YouCompleteMe', {'do': './install.py' }
+
 call plug#end()
 
 "**************************************
@@ -36,10 +60,24 @@ call plug#end()
 let mapleader = "\<Space>"
 
 "**************************************
+" Vimux
+"**************************************
+nnoremap <Leader>r :VimuxRunLastCommand<CR>
+
+"**************************************
 " Ag
 "**************************************
 let g:ag_working_path_mode="r"
 
+" use * to search current word in normal mode
+nmap * <Plug>AgActionWord
+" use * to search selected text in visual mode
+vmap * <Plug>AgActionVisual
+
+"**************************************
+" Troll Stopper Highlighting
+"**************************************
+highlight TrollStopper ctermbg = red guibg = #FF0000
 "**************************************
 " tagbar
 "**************************************
@@ -68,6 +106,7 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 " Airline
 "**************************************
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
 
 "**************************************
 " EasyMotion
@@ -79,11 +118,12 @@ let g:airline#extensions#tabline#enabled = 1
 "**************************************
 set background=dark
 colorscheme solarized
+let g:solarized_visibility="high"
 
 "**************************************
 " a.vim
 "**************************************
-nnoremap <Leader>a  :A<cr>
+nnoremap <Leader><Tab>  :A<cr>
 " a.vim has some really dumb mappings that we need to remove, but we need
 " to wait until vim has loaded to unmap them
 autocmd VimEnter * :iunmap <Space>ihn
@@ -102,26 +142,37 @@ nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
+
+"better than ctrlp
+nnoremap <Leader>o :FZF<cr>
+
+"**************************************
+" Autosave
+"**************************************
+
+let g:auto_save = 1
+let g:auto_save_in_insert_mode = 0
 "**************************************
 " CtrlP
 "**************************************
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_clear_cache_on_exit=0
-
-let g:ctrlp_max_files=80000
-let g:ctrlp_custom_ignore = {
-    \ 'dir': 'work/ecos2\|'
-    \ . 'work/epic\|'
-    \ . 'work/ltib\|'
-    \ . 'work/u-boot-imx6\|'
-    \ . 'work/hst/targets\|'
-    \ . 'mts\.\(\d\d\d\d\|module\)' ,
-    \ 'file': '\.\(a\|so\|o\)$\|'
-    \ . 'tar\.\(bz2\|gz\)$',
-    \ }
-let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+"nnoremap <Leader>b :CtrlPBuffer<CR>
+"let g:ctrlp_map = '<c-p>'
+"let g:ctrlp_cmd = 'CtrlP'
+"let g:ctrlp_working_path_mode = 'ra'
+"let g:ctrlp_clear_cache_on_exit=0
+"
+"let g:ctrlp_max_files=80000
+"let g:ctrlp_custom_ignore = {
+"    \ 'dir': 'work/ecos2\|'
+"    \ . 'work/epic\|'
+"    \ . 'work/ltib\|'
+"    \ . 'work/u-boot-imx6\|'
+"    \ . 'work/hst/targets\|'
+"    \ . 'mts\.\(\d\d\d\d\|module\)' ,
+"    \ 'file': '\.\(a\|so\|o\)$\|'
+"    \ . 'tar\.\(bz2\|gz\)$',
+"    \ }
+"let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
 "**************************************
 " NERDTree
 "**************************************
@@ -144,12 +195,12 @@ nnoremap <Leader>m :NERDTreeToggle<CR>
 
 " " Enable indent guides by default
 " let g:indent_guides_enable_on_vim_startup = 1
-" 
+"
 " " Look and feel
 " let g:indent_guides_auto_colors = 1
 " let g:indent_guides_guide_size = 1
 " let g:indent_guides_start_level = 2
-" 
+"
 " " Disable on certain filetypes
 " let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
 
@@ -160,7 +211,7 @@ nnoremap <Leader>m :NERDTreeToggle<CR>
 " autocomplete in the command menu
 set wildmenu
 
-set colorcolumn=80
+set colorcolumn=81
 
 " 4 spaces for indentation
 set tabstop=4
@@ -184,7 +235,10 @@ set laststatus=2
 
 " Show tabs and trailing whitespace
 set list
-set listchars=tab:▸-,trail:⊡
+set listchars=tab:▸-,precedes:←,extends:→,nbsp:·,trail:⊡
+
+set nowrap
+set sidescroll=1
 
 set nocompatible " Disable vi-compatability
 set encoding=utf-8
@@ -224,6 +278,7 @@ set updatecount=10
 " Keybinds
 "**************************************
 
+nnoremap <Leader>tw :%s/\s\+$//e<CR>
 
 " Death to arrow keys!
 map <up> <nop>
@@ -283,3 +338,30 @@ endif
 " cscope
 "**************************************
 source ~/.cscope_maps.vim
+
+"**************************************
+" Autocommands
+"**************************************
+" Highlight cursorline only in active window
+aug CursorLine
+    autocmd!
+    autocmd VimEnter * setl cursorline
+    autocmd WinEnter * setl cursorline
+    autocmd BufWinEnter * setl cursorline
+    autocmd WinLeave * setl nocursorline
+aug END
+function! NumberToggle()
+  if(&relativenumber == 1)
+    set number
+  else
+    set relativenumber
+  endif
+endfunc
+
+function! Delete()
+    call inputsave()
+    let movement = getchar()
+    call inputrestore()
+    execute "normal! d" . movement
+    call NumberToggle()
+endfunction

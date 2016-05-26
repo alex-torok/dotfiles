@@ -1,6 +1,9 @@
-fish
-exit
+#fish
+#exit
 
+. ~/third-party/z/z.sh
+. ~/third-party/up/src/.bash_functions
+. ~/third-party/up/completion/up
 
 
 if tty -s
