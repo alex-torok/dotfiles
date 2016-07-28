@@ -77,7 +77,9 @@ alias remakeTests='./CleanTests.pl;./MakeTests.pl'
 
 # Git aliases
 alias gits='git status'
+alias gdc='git diff --cached'
 alias gitf='git fetch'
+alias gita='git add'
 alias gitc='git commit -m'
 #!/bin/bash
 

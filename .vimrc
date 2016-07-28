@@ -9,27 +9,27 @@ call plug#begin('~/.vim/plugged')
 " File Switching
 Plug 'vim-scripts/a.vim'
 Plug 'scrooloose/nerdtree'
-" Plug 'ctrlpvim/ctrlp.vim'
-" Plug 'FelikZ/ctrlp-py-matcher'
 Plug 'mbbill/undotree'
 Plug 'mhinz/vim-startify'
 
 " Searching
-" Plug 'majutsushi/tagbar'
+Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
-Plug 'easymotion/vim-easymotion'
+
+Plug 'rking/ag.vim'
+Plug 'Chun-Yang/vim-action-ag'
 
 " External Integrations
 Plug 'tpope/vim-fugitive'
-" Plug 'airblade/vim-gitgutter'
 
 " Look & Feel
-" Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'altercation/vim-colors-solarized'
-Plug 'vim-utils/vim-troll-stopper' "Highlight characters that arent as they appear
+" Plug 'herrbischoff/cobalt2.vim'
+Plug 'w0ng/vim-hybrid'
+" Plug 'altercation/vim-colors-solarized'
+" Plug 'vim-utils/vim-troll-stopper' "Highlight characters that arent as they appear
 " Plug 'nathanaelkane/vim-indent-guides'
 
 " Tmux-Related Integrations
@@ -38,18 +38,12 @@ Plug 'christoomey/vim-tmux-navigator'
 
 " Basic Enhancements
 Plug 'djoshea/vim-autoread'
-Plug 'unblevable/quick-scope'
-Plug 'henrik/vim-indexed-search'
+" Plug 'unblevable/quick-scope'
 Plug 'moll/vim-bbye'
-" Plug 'rking/ag.vim'
 Plug 'vim-scripts/vim-auto-save'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --bin' }
-" Plug 'junegunn/fzf.vim'
-
-" Syntax Checking and Auto-complete
-" Plug 'scrooloose/syntastic'
-" Plug 'Valloric/YouCompleteMe', {'do': './install.py' }
+Plug 'junegunn/fzf.vim'
 
 call plug#end()
 
@@ -67,17 +61,17 @@ nnoremap <Leader>r :VimuxRunLastCommand<CR>
 "**************************************
 " Ag
 "**************************************
-let g:ag_working_path_mode="r"
+" let g:ag_working_path_mode="r"
 
 " use * to search current word in normal mode
-nmap * <Plug>AgActionWord
+" nnoremap * <Plug>AgActionWord
 " use * to search selected text in visual mode
-vmap * <Plug>AgActionVisual
+" vnoremap * <Plug>AgActionVisual
 
 "**************************************
 " Troll Stopper Highlighting
 "**************************************
-highlight TrollStopper ctermbg = red guibg = #FF0000
+" highlight TrollStopper ctermbg = red guibg = #FF0000
 "**************************************
 " tagbar
 "**************************************
@@ -114,11 +108,10 @@ let g:airline_powerline_fonts = 1
 " map <Leader><Leader> <Plug>(easymotion-prefix)
 
 "**************************************
-" Solarized Color
+" Color
 "**************************************
 set background=dark
-colorscheme solarized
-let g:solarized_visibility="high"
+colorscheme default
 
 "**************************************
 " a.vim
@@ -144,7 +137,8 @@ nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
 
 "better than ctrlp
-nnoremap <Leader>o :FZF<cr>
+nnoremap <Leader>o :GFiles --cached --others --exclude-standard<cr>
+nnoremap <Leader>b :Buffers<cr>
 
 "**************************************
 " Autosave
@@ -207,9 +201,11 @@ nnoremap <Leader>m :NERDTreeToggle<CR>
 "**************************************
 " Vim settings
 "**************************************
-:set spell spelllang=en_us
+" :set spell spelllang=en_us
 " autocomplete in the command menu
 set wildmenu
+set wildchar=<Tab>
+set wildmode=full
 
 set colorcolumn=81
 
@@ -235,7 +231,7 @@ set laststatus=2
 
 " Show tabs and trailing whitespace
 set list
-set listchars=tab:▸-,precedes:←,extends:→,nbsp:·,trail:⊡
+set listchars=tab:▸-,precedes:←,extends:→,nbsp:·,trail:•
 
 set nowrap
 set sidescroll=1
@@ -279,16 +275,6 @@ set updatecount=10
 "**************************************
 
 nnoremap <Leader>tw :%s/\s\+$//e<CR>
-
-" Death to arrow keys!
-map <up> <nop>
-map <down> <nop>
-map <left> <nop>
-map <right> <nop>
-imap <up> <nop>
-imap <down> <nop>
-imap <left> <nop>
-imap <right> <nop>
 
 " Ctrl-s saves the file
 noremap <silent> <C-S>          :update<CR>
@@ -365,3 +351,11 @@ function! Delete()
     execute "normal! d" . movement
     call NumberToggle()
 endfunction
+
+" Folding
+"folding settings
+set foldmethod=indent   "fold based on indent
+set foldnestmax=10      "deepest fold is 10 levels
+set nofoldenable        "dont fold by default
+set foldlevel=1
+
