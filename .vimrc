@@ -12,6 +12,9 @@ Plug 'scrooloose/nerdtree'
 Plug 'mbbill/undotree'
 Plug 'mhinz/vim-startify'
 
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --bin' }
+Plug 'junegunn/fzf.vim'
+"
 " Searching
 Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-surround'
@@ -26,8 +29,11 @@ Plug 'tpope/vim-fugitive'
 " Look & Feel
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'Yggdroot/indentLine'
 " Plug 'herrbischoff/cobalt2.vim'
 Plug 'w0ng/vim-hybrid'
+Plug 'tomasr/molokai'
+Plug 'jaxbot/semantic-highlight.vim'
 " Plug 'altercation/vim-colors-solarized'
 " Plug 'vim-utils/vim-troll-stopper' "Highlight characters that arent as they appear
 " Plug 'nathanaelkane/vim-indent-guides'
@@ -38,14 +44,15 @@ Plug 'christoomey/vim-tmux-navigator'
 
 " Basic Enhancements
 Plug 'djoshea/vim-autoread'
-" Plug 'unblevable/quick-scope'
 Plug 'moll/vim-bbye'
-Plug 'vim-scripts/vim-auto-save'
+" Plug 'vim-scripts/vim-auto-save'
+Plug 'vim-scripts/ReplaceWithRegister'
+Plug 'tpope/vim-repeat'
+" Plug 'unblevable/quick-scope'
 
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --bin' }
-Plug 'junegunn/fzf.vim'
 
 call plug#end()
+
 
 "**************************************
 " Important globals
@@ -111,7 +118,9 @@ let g:airline_powerline_fonts = 1
 " Color
 "**************************************
 set background=dark
-colorscheme default
+let g:molokai_original = 1
+colorscheme molokai
+autocmd VimEnter * :AirlineTheme monochrome
 
 "**************************************
 " a.vim
@@ -224,8 +233,8 @@ set omnifunc=syntaxcomplete#Complete
 " Don't warn me when switching buffers
 set hidden
 " Keep 3 lines below and above the cursor
-set scrolloff=3
-set sidescrolloff=3
+set scrolloff=8
+set sidescrolloff=10
 
 set laststatus=2
 
@@ -299,6 +308,8 @@ nnoremap <Leader>p :bprevious<CR>
 " kill that stupid window that pops up
 map q: :q
 
+let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,12,13,14,15]
+nnoremap <Leader>s :SemanticHighlightToggle<cr>
 
 " Automatically save after exiting insert mode
 

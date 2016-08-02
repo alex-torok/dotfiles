@@ -137,5 +137,8 @@ alias debugperl='perl -d:Ptkdb'
 #     fi
 # fi
 # fi
-
+export FZF_DEFAULT_COMMAND='ag -g ""'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+source ~/.iterm2_shell_integration.`basename $SHELL`
