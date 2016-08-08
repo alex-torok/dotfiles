@@ -45,7 +45,7 @@ Plug 'christoomey/vim-tmux-navigator'
 " Basic Enhancements
 Plug 'djoshea/vim-autoread'
 Plug 'moll/vim-bbye'
-" Plug 'vim-scripts/vim-auto-save'
+Plug 'vim-scripts/vim-auto-save'
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'tpope/vim-repeat'
 " Plug 'unblevable/quick-scope'
