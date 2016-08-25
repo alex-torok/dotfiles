@@ -73,7 +73,6 @@ HISTTIMEFORMAT="%d/%m/%y %T "
 # Useful shortcuts
 alias cd..='cd ..'
 alias ..='cd ..'
-alias remakeTests='./CleanTests.pl;./MakeTests.pl'
 
 # Git aliases
 alias gits='git status'
@@ -81,11 +80,9 @@ alias gdc='git diff --cached'
 alias gitf='git fetch'
 alias gita='git add'
 alias gitc='git commit -m'
-#!/bin/bash
 
 # save as i.e.: git-authors and set the executable flag
 alias git-authors='git ls-tree -r -z --name-only HEAD -- $1 | xargs -0 -n1 git blame --line-porcelain HEAD |grep  "^author "|sort|uniq -c|sort -nr'
-
 
 alias num2ip='~/test-farm-utilities/numToIp.rb'
 alias ip2num='~/test-farm-utilities/ipToNum.rb'
@@ -116,27 +113,12 @@ PERL_LOCAL_LIB_ROOT="/home/tor59451/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LI
 PERL_MB_OPT="--install_base \"/home/tor59451/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/tor59451/perl5"; export PERL_MM_OPT;
 
-
 alias debugperl='perl -d:Ptkdb'
 
 #source ${HOME}/nest/config/nest_bashrc
 
 . $HOME/.shellrc.load
 
-# 
-# if tty -s
-# then
-# if [ -z ${TMUX+x} ]
-# then
-#     tmux ls
-#     if [ $? -eq 0 ]
-#     then
-#         tmux a
-#     else
-#         tmux
-#     fi
-# fi
-# fi
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="--preview '(coderay {} || cat {} || tree -C {}) 2> /dev/null | head -$LINES'"
@@ -144,8 +126,7 @@ export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden --bin
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-
-# GIT heart FZF
+# GIT heart FZF - Courtesy of junegunn
 # -------------
 
 is_in_git_repo () {
@@ -187,21 +168,11 @@ gh() {
   grep -o "[a-f0-9]\{7,\}"
 }
 
-gr() {
-  is_in_git_repo || return
-  git remote -v | awk '{print $1 " " $2}' | uniq |
-  fzf-tmux --tac \
-    --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(cut -d" " -f1 <<< {}) | head -'$LINES |
-  cut -d' ' -f1
-}
-
 bind '"\er": redraw-current-line'
 bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
 bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
 bind '"\C-g\C-t": "$(gt)\e\C-e\er"'
 bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
-bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
-
 
 # fshow - git commit browser
 fshow() {
