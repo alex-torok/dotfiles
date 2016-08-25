@@ -10,33 +10,40 @@ call plug#begin('~/.vim/plugged')
 Plug 'vim-scripts/a.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'mbbill/undotree'
-Plug 'mhinz/vim-startify'
-
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --bin' }
 Plug 'junegunn/fzf.vim'
-"
+" Plug 'mhinz/vim-startify'
+
+
 " Searching
 Plug 'majutsushi/tagbar'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-commentary'
-
 Plug 'rking/ag.vim'
 Plug 'Chun-Yang/vim-action-ag'
 
+" Editing
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'vim-scripts/ReplaceWithRegister'
+Plug 'wellle/targets.vim'
+
 " External Integrations
 Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
 " Look & Feel
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'Yggdroot/indentLine'
-" Plug 'herrbischoff/cobalt2.vim'
-Plug 'w0ng/vim-hybrid'
-Plug 'tomasr/molokai'
 Plug 'jaxbot/semantic-highlight.vim'
-" Plug 'altercation/vim-colors-solarized'
-" Plug 'vim-utils/vim-troll-stopper' "Highlight characters that arent as they appear
-" Plug 'nathanaelkane/vim-indent-guides'
+Plug 'sheerun/vim-polyglot'
+
+" Colorschemes! 
+Plug 'bcicen/vim-vice'
+Plug 'tomasr/molokai'
+Plug 'w0ng/vim-hybrid'
+Plug 'herrbischoff/cobalt2.vim'
+Plug 'altercation/vim-colors-solarized'
+Plug 'dracula/vim'
 
 " Tmux-Related Integrations
 Plug 'benmills/vimux'
@@ -46,19 +53,31 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'djoshea/vim-autoread'
 Plug 'moll/vim-bbye'
 Plug 'vim-scripts/vim-auto-save'
-Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'tpope/vim-repeat'
-" Plug 'unblevable/quick-scope'
+Plug 'unblevable/quick-scope'
+Plug 'AndrewRadev/linediff.vim'
 
 
 call plug#end()
-
 
 "**************************************
 " Important globals
 "**************************************
 " Leader key is space
 let mapleader = "\<Space>"
+
+"**************************************
+" Git Gutter
+"**************************************
+let g:gitgutter_realtime = 0
+let g:gitgutter_eager = 0
+let g:gitgutter_sign_column_always = 1
+
+"**************************************
+" FZF
+"**************************************
+let g:fzf_files_options =
+  \ '--preview "(coderay {} || cat {}) 2> /dev/null | head -'.&lines.'"'
 
 "**************************************
 " Vimux
@@ -119,8 +138,8 @@ let g:airline_powerline_fonts = 1
 "**************************************
 set background=dark
 let g:molokai_original = 1
-colorscheme molokai
-autocmd VimEnter * :AirlineTheme monochrome
+
+color dracula
 
 "**************************************
 " a.vim
@@ -146,7 +165,16 @@ nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
 
 "better than ctrlp
-nnoremap <Leader>o :GFiles --cached --others --exclude-standard<cr>
+" nnoremap <Leader>o :GFiles --cached --others --exclude-standard<cr>
+" show git log history of
+command! FZFGFiles :call fzf#run({
+\  'source':  'git ls-files --cached --others --exclude-standard',
+\  'sink':    'edit',
+\  'dir':     split(system('git rev-parse --show-toplevel || pwd'), '\n')[0],
+\  'options': '--preview "git log --format=\"%ar %Cred(%cn) %Creset%s\" {} | head -'.&lines.' | cut -c1-'.&columns/2.' || (cat {}) 2> /dev/null | head -'.&lines.'"',
+\  'down':    '40%'})
+nnoremap <Leader>o :FZFGFiles<cr>
+" :GFiles --cached --others --exclude-standard<cr>
 nnoremap <Leader>b :Buffers<cr>
 
 "**************************************
@@ -155,27 +183,6 @@ nnoremap <Leader>b :Buffers<cr>
 
 let g:auto_save = 1
 let g:auto_save_in_insert_mode = 0
-"**************************************
-" CtrlP
-"**************************************
-"nnoremap <Leader>b :CtrlPBuffer<CR>
-"let g:ctrlp_map = '<c-p>'
-"let g:ctrlp_cmd = 'CtrlP'
-"let g:ctrlp_working_path_mode = 'ra'
-"let g:ctrlp_clear_cache_on_exit=0
-"
-"let g:ctrlp_max_files=80000
-"let g:ctrlp_custom_ignore = {
-"    \ 'dir': 'work/ecos2\|'
-"    \ . 'work/epic\|'
-"    \ . 'work/ltib\|'
-"    \ . 'work/u-boot-imx6\|'
-"    \ . 'work/hst/targets\|'
-"    \ . 'mts\.\(\d\d\d\d\|module\)' ,
-"    \ 'file': '\.\(a\|so\|o\)$\|'
-"    \ . 'tar\.\(bz2\|gz\)$',
-"    \ }
-"let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
 "**************************************
 " NERDTree
 "**************************************
@@ -189,33 +196,19 @@ let NERDTreeShowHidden=1
 " Quit vim if NERDTree is the only buffer
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-
 nnoremap <Leader>f :NERDTreeFind<CR>
 nnoremap <Leader>m :NERDTreeToggle<CR>
-"**************************************
-" vim-indent-guides
-"**************************************
-
-" " Enable indent guides by default
-" let g:indent_guides_enable_on_vim_startup = 1
-"
-" " Look and feel
-" let g:indent_guides_auto_colors = 1
-" let g:indent_guides_guide_size = 1
-" let g:indent_guides_start_level = 2
-"
-" " Disable on certain filetypes
-" let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
 
 "**************************************
 " Vim settings
 "**************************************
-" :set spell spelllang=en_us
+
 " autocomplete in the command menu
 set wildmenu
 set wildchar=<Tab>
 set wildmode=full
 
+" show vertical line at 81 characters
 set colorcolumn=81
 
 " 4 spaces for indentation
@@ -227,15 +220,18 @@ set softtabstop=4
 set smarttab
 set autoindent
 filetype plugin indent on
+
 " enable omnicompletion
 set omnifunc=syntaxcomplete#Complete
 
 " Don't warn me when switching buffers
 set hidden
-" Keep 3 lines below and above the cursor
+
+" Keep lines above/below and to left/right of cursor
 set scrolloff=8
 set sidescrolloff=10
 
+" Enable statusline
 set laststatus=2
 
 " Show tabs and trailing whitespace
@@ -243,7 +239,7 @@ set list
 set listchars=tab:▸-,precedes:←,extends:→,nbsp:·,trail:•
 
 set nowrap
-set sidescroll=1
+set sidescroll=5
 
 set nocompatible " Disable vi-compatability
 set encoding=utf-8
@@ -279,11 +275,15 @@ set splitbelow
 
 " create swap files every 10 keystrokes
 set updatecount=10
+
 "**************************************
 " Keybinds
 "**************************************
 
-nnoremap <Leader>tw :%s/\s\+$//e<CR>
+" Trim trailing whitespace
+command! Chomp %s/\s\+$// | normal! ``
+nnoremap <Leader>tw :Chomp<CR>
+
 
 " Ctrl-s saves the file
 noremap <silent> <C-S>          :update<CR>
@@ -293,6 +293,7 @@ inoremap <silent> <C-S>         <C-O>:update<CR>
 " Save all
 nnoremap <Leader>w :wa<CR>
 
+nnoremap Y y$
 " Highlight our current line
 set cursorline
 
