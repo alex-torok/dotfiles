@@ -17,8 +17,8 @@ Plug 'junegunn/fzf.vim'
 
 " Searching
 Plug 'majutsushi/tagbar'
-Plug 'rking/ag.vim'
-Plug 'Chun-Yang/vim-action-ag'
+" Plug 'rking/ag.vim'
+" Plug 'Chun-Yang/vim-action-ag'
 
 " Editing
 Plug 'tpope/vim-surround'
@@ -57,7 +57,6 @@ Plug 'tpope/vim-repeat'
 Plug 'unblevable/quick-scope'
 Plug 'AndrewRadev/linediff.vim'
 
-
 call plug#end()
 
 "**************************************
@@ -79,25 +78,23 @@ let g:gitgutter_sign_column_always = 1
 let g:fzf_files_options =
   \ '--preview "(coderay {} || cat {}) 2> /dev/null | head -'.&lines.'"'
 
+command! FZFGFiles :call fzf#run({
+\  'source':  'git ls-files --cached --others --exclude-standard',
+\  'sink':    'edit',
+\  'dir':     split(system('git rev-parse --show-toplevel || pwd'), '\n')[0],
+\  'options': '--preview "git log --format=\"%ar %Cred(%cn) %Creset%s\" {} | head -'.&lines.' | cut -c1-'.&columns/2.' || (cat {}) 2> /dev/null | head -'.&lines.'"',
+\  'down':    '40%'})
+
+nnoremap <Leader>g :FZFGFiles<cr>
+
+nnoremap <Leader>o :Files<cr>
+nnoremap <Leader>b :Buffers<cr>
+
 "**************************************
 " Vimux
 "**************************************
 nnoremap <Leader>r :VimuxRunLastCommand<CR>
 
-"**************************************
-" Ag
-"**************************************
-" let g:ag_working_path_mode="r"
-
-" use * to search current word in normal mode
-" nnoremap * <Plug>AgActionWord
-" use * to search selected text in visual mode
-" vnoremap * <Plug>AgActionVisual
-
-"**************************************
-" Troll Stopper Highlighting
-"**************************************
-" highlight TrollStopper ctermbg = red guibg = #FF0000
 "**************************************
 " tagbar
 "**************************************
@@ -129,11 +126,6 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 
 "**************************************
-" EasyMotion
-"**************************************
-" map <Leader><Leader> <Plug>(easymotion-prefix)
-
-"**************************************
 " Color
 "**************************************
 set background=dark
@@ -154,6 +146,7 @@ autocmd VimEnter * :iunmap <Space>ih
 autocmd VimEnter * :nunmap <Space>ihn
 autocmd VimEnter * :nunmap <Space>is
 autocmd VimEnter * :nunmap <Space>ih
+
 "**************************************
 " vim-tmux-navigator
 "**************************************
@@ -163,19 +156,6 @@ nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
-
-"better than ctrlp
-" nnoremap <Leader>o :GFiles --cached --others --exclude-standard<cr>
-" show git log history of
-command! FZFGFiles :call fzf#run({
-\  'source':  'git ls-files --cached --others --exclude-standard',
-\  'sink':    'edit',
-\  'dir':     split(system('git rev-parse --show-toplevel || pwd'), '\n')[0],
-\  'options': '--preview "git log --format=\"%ar %Cred(%cn) %Creset%s\" {} | head -'.&lines.' | cut -c1-'.&columns/2.' || (cat {}) 2> /dev/null | head -'.&lines.'"',
-\  'down':    '40%'})
-nnoremap <Leader>o :FZFGFiles<cr>
-" :GFiles --cached --others --exclude-standard<cr>
-nnoremap <Leader>b :Buffers<cr>
 
 "**************************************
 " Autosave
@@ -189,15 +169,18 @@ let g:auto_save_in_insert_mode = 0
 
 let NERDTreeShowHidden=1
 
-" Automatically open NERDTree
-" autocmd vimenter * NERDTree
-" autocmd vimenter * wincmd p
-
 " Quit vim if NERDTree is the only buffer
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 nnoremap <Leader>f :NERDTreeFind<CR>
 nnoremap <Leader>m :NERDTreeToggle<CR>
+
+"**************************************
+" Semantic colors
+"**************************************
+
+let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,12,13,14,15]
+nnoremap <Leader>s :SemanticHighlightToggle<cr>
 
 "**************************************
 " Vim settings
@@ -284,35 +267,25 @@ set updatecount=10
 command! Chomp %s/\s\+$// | normal! ``
 nnoremap <Leader>tw :Chomp<CR>
 
-
-" Ctrl-s saves the file
-noremap <silent> <C-S>          :update<CR>
-vnoremap <silent> <C-S>         <C-C>:update<CR>
-inoremap <silent> <C-S>         <C-O>:update<CR>
-
-" Save all
-nnoremap <Leader>w :wa<CR>
-
+" Make Y behave like other commands
 nnoremap Y y$
+
 " Highlight our current line
 set cursorline
 
 " allow backspace through everything
 set backspace=indent,eol,start
+
 " let's speed some stuff up
 set lazyredraw
 set ttyfast
 
+" switching between buffers
 nnoremap <Leader>n :bnext<CR>
 nnoremap <Leader>p :bprevious<CR>
 
 " kill that stupid window that pops up
 map q: :q
-
-let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,12,13,14,15]
-nnoremap <Leader>s :SemanticHighlightToggle<cr>
-
-" Automatically save after exiting insert mode
 
 "**************************************
 " Persistent undo
@@ -340,6 +313,7 @@ source ~/.cscope_maps.vim
 "**************************************
 " Autocommands
 "**************************************
+
 " Highlight cursorline only in active window
 aug CursorLine
     autocmd!
@@ -348,26 +322,3 @@ aug CursorLine
     autocmd BufWinEnter * setl cursorline
     autocmd WinLeave * setl nocursorline
 aug END
-function! NumberToggle()
-  if(&relativenumber == 1)
-    set number
-  else
-    set relativenumber
-  endif
-endfunc
-
-function! Delete()
-    call inputsave()
-    let movement = getchar()
-    call inputrestore()
-    execute "normal! d" . movement
-    call NumberToggle()
-endfunction
-
-" Folding
-"folding settings
-set foldmethod=indent   "fold based on indent
-set foldnestmax=10      "deepest fold is 10 levels
-set nofoldenable        "dont fold by default
-set foldlevel=1
-
