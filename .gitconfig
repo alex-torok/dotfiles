@@ -25,6 +25,6 @@ lg3 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(
 lg = !"git lg1"
 commit = 'commit --verbose'
 [pager]
-	log = diff-highlight | less
-	show = diff-highlight | less
-	diff = diff-highlight | less
+	log = ~/third-party/diff-highlight | less
+	show = ~/third-party/diff-highlight | less
+	diff = ~/third-party/diff-highlight | less
