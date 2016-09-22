@@ -36,6 +36,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'Yggdroot/indentLine'
 Plug 'jaxbot/semantic-highlight.vim'
 Plug 'sheerun/vim-polyglot'
+Plug 'kien/rainbow_parentheses.vim'
 
 " Colorschemes! 
 Plug 'bcicen/vim-vice'
@@ -56,6 +57,8 @@ Plug 'vim-scripts/vim-auto-save'
 Plug 'tpope/vim-repeat'
 Plug 'unblevable/quick-scope'
 Plug 'AndrewRadev/linediff.vim'
+Plug 'nickhutchinson/vim-cmake-syntax'
+" Plug 'junegunn/vim-peekaboo'
 
 call plug#end()
 
@@ -106,6 +109,19 @@ nnoremap <Leader>t :TagbarToggle<CR>
 :nnoremap <Leader>q :Bdelete<CR>
 
 "**************************************
+" Rainbow Parenthesis
+"**************************************
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+"**************************************
+" tpope/commentary
+"**************************************
+autocmd FileType cmake setlocal commentstring=#%s
+"
+"**************************************
 " Undo Tree
 "**************************************
 nnoremap <Leader>u :UndotreeToggle<CR>:UndotreeFocus <CR>
@@ -131,7 +147,7 @@ let g:airline_powerline_fonts = 1
 set background=dark
 let g:molokai_original = 1
 
-color dracula
+color molokai
 
 "**************************************
 " a.vim
@@ -263,6 +279,11 @@ set updatecount=10
 " Keybinds
 "**************************************
 
+nmap <c-c> <esc>
+imap <c-c> <esc>
+vmap <c-c> <esc>
+omap <c-c> <esc>
+
 " Trim trailing whitespace
 command! Chomp %s/\s\+$// | normal! ``
 nnoremap <Leader>tw :Chomp<CR>
@@ -315,10 +336,10 @@ source ~/.cscope_maps.vim
 "**************************************
 
 " Highlight cursorline only in active window
-aug CursorLine
-    autocmd!
-    autocmd VimEnter * setl cursorline
-    autocmd WinEnter * setl cursorline
-    autocmd BufWinEnter * setl cursorline
-    autocmd WinLeave * setl nocursorline
-aug END
+" aug CursorLine
+"     autocmd!
+"     autocmd VimEnter * setl cursorline
+"     autocmd WinEnter * setl cursorline
+"     autocmd BufWinEnter * setl cursorline
+"     autocmd WinLeave * setl nocursorline
+" aug END
