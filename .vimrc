@@ -1,10 +1,16 @@
-" Automatically install Plug
+" Folding {{{
+" set foldmethod=marker
+" set foldlevel=0
+" set modelines=1
+" }}}
+" Automatically Install Plug {{{
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall | source $MYVIMRC
 endif
-
+" }}}
+" Plugin List {{{
 call plug#begin('~/.vim/plugged')
 " File Switching
 Plug 'vim-scripts/a.vim'
@@ -12,6 +18,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'mbbill/undotree'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --bin' }
 Plug 'junegunn/fzf.vim'
+Plug 'tweekmonster/fzf-filemru'
 " Plug 'mhinz/vim-startify'
 
 
@@ -61,23 +68,16 @@ Plug 'nickhutchinson/vim-cmake-syntax'
 " Plug 'junegunn/vim-peekaboo'
 
 call plug#end()
-
-"**************************************
-" Important globals
-"**************************************
-" Leader key is space
+" }}}
+" Map Leader {{{
 let mapleader = "\<Space>"
-
-"**************************************
-" Git Gutter
-"**************************************
+" }}}
+" Git Gutter {{{
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0
 let g:gitgutter_sign_column_always = 1
-
-"**************************************
-" FZF
-"**************************************
+"}}}
+" FZF {{{
 let g:fzf_files_options =
   \ '--preview "(coderay {} || cat {}) 2> /dev/null | head -'.&lines.'"'
 
@@ -92,66 +92,47 @@ nnoremap <Leader>g :FZFGFiles<cr>
 
 nnoremap <Leader>o :Files<cr>
 nnoremap <Leader>b :Buffers<cr>
-
-"**************************************
-" Vimux
-"**************************************
+nnoremap <Leader>r :FilesMru<cr>
+" }}}
+" Vimux {{{
 nnoremap <Leader>r :VimuxRunLastCommand<CR>
-
-"**************************************
-" tagbar
-"**************************************
+" }}}
+" tagbar {{{
 nnoremap <Leader>t :TagbarToggle<CR>
-
-"**************************************
-" vim-bbye
-"**************************************
+" }}}
+" vim-bbye {{{
 :nnoremap <Leader>q :Bdelete<CR>
-
-"**************************************
-" Rainbow Parenthesis
-"**************************************
+" }}}
+" Rainbow Parenthesis {{{
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
-
-"**************************************
-" tpope/commentary
-"**************************************
+" }}}
+" tpope/commentary {{{
 autocmd FileType cmake setlocal commentstring=#%s
-"
-"**************************************
-" Undo Tree
-"**************************************
+"}}}
+" Undo Tree {{{
 nnoremap <Leader>u :UndotreeToggle<CR>:UndotreeFocus <CR>
 let g:undotree_SetFocusWhenToggle = 1
 let g:undotree_SetFocusWhenToggle = 1
 let g:undotree_WindowLayout = 2
-
-"**************************************
-" Quick Scope
-"**************************************
+" }}}
+" Quick Scope {{{
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-
-"**************************************
-" Airline
-"**************************************
+" }}}
+" Airline {{{
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
-
-"**************************************
-" Color
-"**************************************
+" }}}
+" Color {{{
 set background=dark
 let g:molokai_original = 1
 
 color molokai
-
-"**************************************
-" a.vim
-"**************************************
+" }}}
+" a.vim {{{
 nnoremap <Leader><Tab>  :A<cr>
 " a.vim has some really dumb mappings that we need to remove, but we need
 " to wait until vim has loaded to unmap them
@@ -162,26 +143,21 @@ autocmd VimEnter * :iunmap <Space>ih
 autocmd VimEnter * :nunmap <Space>ihn
 autocmd VimEnter * :nunmap <Space>is
 autocmd VimEnter * :nunmap <Space>ih
-
-"**************************************
-" vim-tmux-navigator
-"**************************************
+" }}}
+" vim-tmux-navigator {{{
 let g:tmux_navigator_no_mappings = 1
 
 nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
-
-"**************************************
-" Autosave
-"**************************************
+" }}}
+" Autosave {{{
 
 let g:auto_save = 1
 let g:auto_save_in_insert_mode = 0
-"**************************************
-" NERDTree
-"**************************************
+" }}}
+" NERDTree {{{
 
 let NERDTreeShowHidden=1
 
@@ -190,18 +166,13 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 nnoremap <Leader>f :NERDTreeFind<CR>
 nnoremap <Leader>m :NERDTreeToggle<CR>
-
-"**************************************
-" Semantic colors
-"**************************************
+" }}}
+" Semantic colors {{{
 
 let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,12,13,14,15]
 nnoremap <Leader>s :SemanticHighlightToggle<cr>
-
-"**************************************
-" Vim settings
-"**************************************
-
+" }}}
+" Vim Settings {{{
 " autocomplete in the command menu
 set wildmenu
 set wildchar=<Tab>
@@ -274,10 +245,8 @@ set splitbelow
 
 " create swap files every 10 keystrokes
 set updatecount=10
-
-"**************************************
-" Keybinds
-"**************************************
+" }}}
+" Keybinds {{{
 
 nmap <c-c> <esc>
 imap <c-c> <esc>
@@ -308,9 +277,8 @@ nnoremap <Leader>p :bprevious<CR>
 " kill that stupid window that pops up
 map q: :q
 
-"**************************************
-" Persistent undo
-"**************************************
+"}}}
+" Persistent Undo {{{
 
 " Put plugins and dictionaries in this dir (also on Windows)
 let vimDir = '$HOME/.vim'
@@ -326,6 +294,7 @@ if has('persistent_undo')
     set undofile
 endif
 
+" }}}
 "**************************************
 " cscope
 "**************************************
@@ -343,3 +312,7 @@ source ~/.cscope_maps.vim
 "     autocmd BufWinEnter * setl cursorline
 "     autocmd WinLeave * setl nocursorline
 " aug END
+
+
+
+" vim:foldmethod=marker:foldlevel=0
