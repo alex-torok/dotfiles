@@ -37,36 +37,12 @@ git show HEAD --format="%ar" 2> /dev/null | head -n1 | cut -d":" -f2 | sed 's/^\
 
 export PS1="${BOLD}\t ${NORMAL}[\u@\h] ${BOLD}${WHITE}(\$(parse_git_branch) - \$(parse_git_age)) \
 ${NORMAL}${GREEN}\w\\n${BOLD}${RED}\$${NORMAL} "
-# .bashrc
-#export PS1="prompt: " 
-# Source global definitions
-# if [ -f /etc/bashrc ]; then
-# 	. /etc/bashrc
-# fi
 
-# User specific aliases and functions
-if [ -e ~/working-copy/test-farm/test-farm/util/toys/test-farm-helpers ]
-then
-    source ~/working-copy/test-farm/test-farm/util/toys/test-farm-helpers
-    alias etd='echo $TESTDIR'
-fi
-
-function tags () {
-    #clean older info
-    rm -rf tags
-    rm -rf cscope.files
-    rm -rf cscope.out
-    # generate new info
-    echo "Creating ctags"
-    ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q .
-    echo "Finding files for cscope"
-    find | egrep -i "\.(c|h|cpp)$" > cscope.files
-    echo "Creating cscope"
-    cscope -Rb
-}
 # cpp and h cscope
 alias cppscope='find . | grep -P "\.(cpp|h)$" > cppscope.files && cscope -b -i ./cppscope.files'
 
+alias ll='ls -l'
+alias ls='ls --color=auto'
 # Add timestamps to the history
 HISTTIMEFORMAT="%d/%m/%y %T "
 
@@ -83,11 +59,6 @@ alias gitc='git commit -m'
 
 # save as i.e.: git-authors and set the executable flag
 alias git-authors='git ls-tree -r -z --name-only HEAD -- $1 | xargs -0 -n1 git blame --line-porcelain HEAD |grep  "^author "|sort|uniq -c|sort -nr'
-
-alias num2ip='~/test-farm-utilities/numToIp.rb'
-alias ip2num='~/test-farm-utilities/ipToNum.rb'
-
-alias vnc='vncviewer'
 
 alias xvfb='Xvfb :99 & &>/dev/null; export DISPLAY=:99'
 
@@ -115,7 +86,6 @@ PERL_MM_OPT="INSTALL_BASE=/home/tor59451/perl5"; export PERL_MM_OPT;
 
 alias debugperl='perl -d:Ptkdb'
 
-#source ${HOME}/nest/config/nest_bashrc
 
 . $HOME/.shellrc.load
 
@@ -133,7 +103,6 @@ is_in_git_repo () {
   git rev-parse HEAD > /dev/null 2>&1
 }
 
-unalias gf
 gf () {
   is_in_git_repo || return
   git -c color.status=always status --short |
