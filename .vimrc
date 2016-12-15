@@ -32,6 +32,8 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'wellle/targets.vim'
+" Plug 'SirVer/ultisnips'
+" Plug 'honza/vim-snippets'
 
 " External Integrations
 Plug 'tpope/vim-fugitive'
@@ -76,7 +78,37 @@ let mapleader = "\<Space>"
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0
 let g:gitgutter_sign_column_always = 1
+" let g:gitgutter_highlight_lines = 1
+let g:gitgutter_diff_args = '-w'
+
+nmap <Leader>gn <Plug>GitGutterNextHunk
+nmap <Leader>gp <Plug>GitGutterPrevHunk
+nmap <Leader>gs <Plug>GitGutterStageHunk
+nmap <Leader>gu <Plug>GitGutterUndoHunk
+nmap <Leader>gv <Plug>GitGutterPreviewHunk
+highlight link GitGutterDeleteLine NONE
+
+" augroup GitGutterHighlight
+"     autocmd ColorScheme hi DiffAdd    cterm=bold     ctermfg=NONE ctermbg=22
+"     autocmd ColorScheme hi DiffDelete cterm=bold ctermfg=NONE ctermbg=88
+"     autocmd ColorScheme hi DiffChange cterm=bold ctermfg=NONE ctermbg=24
+"     autocmd ColorScheme hi DiffText   cterm=bold ctermfg=NONE ctermbg=darkyellow
+" augroup END
+
 "}}}
+"
+" Ulti-snips {{{
+
+" " " Trigger configuration. Do not use <tab> if you use
+" " " https://github.com/Valloric/YouCompleteMe.
+" let g:UltiSnipsExpandTrigger="<tab>"
+" let g:UltiSnipsJumpForwardTrigger="<tab>"
+" let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
+
+
+" If you want :UltiSnipsEdit to split your window.
+"let g:UltiSnipsEditSplit="vertical"
+" }}}
 " FZF {{{
 let g:fzf_files_options =
   \ '--preview "(coderay {} || cat {}) 2> /dev/null | head -'.&lines.'"'
@@ -88,9 +120,9 @@ command! FZFGFiles :call fzf#run({
 \  'options': '--preview "git log --format=\"%ar %Cred(%cn) %Creset%s\" {} | head -'.&lines.' | cut -c1-'.&columns/2.' || (cat {}) 2> /dev/null | head -'.&lines.'"',
 \  'down':    '40%'})
 
-nnoremap <Leader>g :FZFGFiles<cr>
+nnoremap <Leader>og :FZFGFiles<cr>
 
-nnoremap <Leader>o :Files<cr>
+nnoremap <Leader>of :Files<cr>
 nnoremap <Leader>b :Buffers<cr>
 nnoremap <Leader>r :FilesMru<cr>
 " }}}
@@ -154,6 +186,7 @@ nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
 " }}}
 " Autosave {{{
 
+let g:auto_save_silent = 1
 let g:auto_save = 1
 let g:auto_save_in_insert_mode = 0
 " }}}
@@ -170,7 +203,7 @@ nnoremap <Leader>m :NERDTreeToggle<CR>
 " Semantic colors {{{
 
 let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,12,13,14,15]
-nnoremap <Leader>s :SemanticHighlightToggle<cr>
+" nnoremap <Leader>s :SemanticHighlightToggle<cr>
 " }}}
 " Vim Settings {{{
 " autocomplete in the command menu
@@ -295,24 +328,20 @@ if has('persistent_undo')
 endif
 
 " }}}
-"**************************************
-" cscope
-"**************************************
+" cscope {{{
 source ~/.cscope_maps.vim
-
-"**************************************
-" Autocommands
-"**************************************
+" }}}
+" Autocommands {{{
 
 " Highlight cursorline only in active window
-" aug CursorLine
-"     autocmd!
-"     autocmd VimEnter * setl cursorline
-"     autocmd WinEnter * setl cursorline
-"     autocmd BufWinEnter * setl cursorline
-"     autocmd WinLeave * setl nocursorline
-" aug END
+aug CursorLine
+    autocmd!
+    autocmd VimEnter * setl cursorline
+    autocmd WinEnter * setl cursorline
+    autocmd BufWinEnter * setl cursorline
+    autocmd WinLeave * setl nocursorline
+aug END
 
-
+" }}}
 
 " vim:foldmethod=marker:foldlevel=0
