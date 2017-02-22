@@ -120,9 +120,9 @@ command! FZFGFiles :call fzf#run({
 \  'options': '--preview "git log --format=\"%ar %Cred(%cn) %Creset%s\" {} | head -'.&lines.' | cut -c1-'.&columns/2.' || (cat {}) 2> /dev/null | head -'.&lines.'"',
 \  'down':    '40%'})
 
-nnoremap <Leader>og :FZFGFiles<cr>
+" nnoremap <Leader>og :FZFGFiles<cr>
 
-nnoremap <Leader>of :Files<cr>
+nnoremap <Leader>o :Files<cr>
 nnoremap <Leader>b :Buffers<cr>
 nnoremap <Leader>r :FilesMru<cr>
 " }}}

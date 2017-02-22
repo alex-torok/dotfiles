@@ -73,11 +73,6 @@ function scpi {
     scpiclient --ip $1 --port $port
 }
 
-function viavnc {
-
-        vncviewer $1 -name $1 &
-}
-
 PATH="/home/tor59451/perl5/bin${PATH+:}${PATH}"; export PATH;
 PERL5LIB="/home/tor59451/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
 PERL_LOCAL_LIB_ROOT="/home/tor59451/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
@@ -103,14 +98,15 @@ is_in_git_repo () {
   git rev-parse HEAD > /dev/null 2>&1
 }
 
-gf () {
-  is_in_git_repo || return
-  git -c color.status=always status --short |
-  fzf-tmux -m --ansi --nth 2..,.. \
-    --preview 'NAME="$(cut -c4- <<< {})" &&
-               (git diff --color=always "$NAME" | sed 1,4d; cat "$NAME") | head -'$LINES |
-  cut -c4-
-}
+# unalias gf
+# gf () {
+#   is_in_git_repo || return
+#   git -c color.status=always status --short |
+#   fzf-tmux -m --ansi --nth 2..,.. \
+#     --preview 'NAME="$(cut -c4- <<< {})" &&
+#                (git diff --color=always "$NAME" | sed 1,4d; cat "$NAME") | head -'$LINES |
+#   cut -c4-
+# }
 
 gb() {
   is_in_git_repo || return
@@ -137,14 +133,11 @@ gh() {
   grep -o "[a-f0-9]\{7,\}"
 }
 
-if tty -s
-then
-    bind '"\er": redraw-current-line'
-    bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
-    bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
-    bind '"\C-g\C-t": "$(gt)\e\C-e\er"'
-    bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
-fi
+# bind '"\er": redraw-current-line'
+# bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
+# bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
+# bind '"\C-g\C-t": "$(gt)\e\C-e\er"'
+# bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
 
 # fshow - git commit browser
 fshow() {
