@@ -32,7 +32,7 @@ function parse_git_branch () {
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
 }
 function parse_git_age () {
-git show HEAD --format="%ar" 2> /dev/null | head -n1 | cut -d":" -f2 | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/'
+git log -n1 --format="%ar" 2> /dev/null | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/'
 }
 
 export PS1="${BOLD}\t ${NORMAL}[\u@\h] ${BOLD}${WHITE}(\$(parse_git_branch) - \$(parse_git_age)) \
