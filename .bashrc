@@ -29,7 +29,7 @@ then
 fi
 
 function parse_git_branch () {
-  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
+    __git_ps1 | sed -r 's_ \((.+)\)_\1_'
 }
 function parse_git_age () {
 git log -n1 --format="%ar" 2> /dev/null | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/'
@@ -91,6 +91,17 @@ export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden --bin
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+
+ninja_target_fzf() {
+  if ! [ -e build.ninja ]; then
+      return
+  fi
+
+  ninja -t targets all | cut -d: -f1 |
+  fzf-tmux
+}
+bind '"\C-g\C-n": "$(ninja_target_fzf)\e\C-e\er"'
+
 # GIT heart FZF - Courtesy of junegunn
 # -------------
 
@@ -135,7 +146,7 @@ gh() {
 
 # bind '"\er": redraw-current-line'
 # bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
-# bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
+bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
 # bind '"\C-g\C-t": "$(gt)\e\C-e\er"'
 # bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
 

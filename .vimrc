@@ -32,8 +32,10 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'wellle/targets.vim'
+Plug 'rhysd/vim-clang-format'
 " Plug 'SirVer/ultisnips'
 " Plug 'honza/vim-snippets'
+" Plug 'Valloric/YouCompleteMe'
 
 " External Integrations
 Plug 'tpope/vim-fugitive'
@@ -202,8 +204,8 @@ nnoremap <Leader>m :NERDTreeToggle<CR>
 " }}}
 " Semantic colors {{{
 
-let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,12,13,14,15]
-" nnoremap <Leader>s :SemanticHighlightToggle<cr>
+let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,11,13,15,46,51,199]
+nnoremap <Leader>s :SemanticHighlightToggle<cr>
 " }}}
 " Vim Settings {{{
 " autocomplete in the command menu
@@ -342,6 +344,13 @@ aug CursorLine
     autocmd WinLeave * setl nocursorline
 aug END
 
+" }}}
+" clang-format {{{
+
+" map to <Leader>cf in C++ code
+autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
+let g:clang_format#command = "clang-format-3.8"
 " }}}
 
 " vim:foldmethod=marker:foldlevel=0
