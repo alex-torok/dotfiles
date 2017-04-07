@@ -27,6 +27,9 @@
     hist = log --pretty=format:\"%C(yellow)%h%C(reset) %C(green)%ad%C(reset) %C(red)|%C(reset) %s %C(bold blue)[%an]%C(reset)%C(yellow)%d%C(reset)\" --graph --date=short
     dt = difftool
 
+[status]
+    showUntrackedFiles = all
+
 [color "status"]
     added = green
     changed = yellow bold
