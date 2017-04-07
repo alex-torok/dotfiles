@@ -1,31 +1,55 @@
 [user]
-	name = Alex Torok
-	email = Alex.Torok@viavisolutions.com
+    name = Alex Torok
+    email = Alex.Torok@viavisolutions.com
 [push]
-	default = simple
+    default = simple
 [merge]
-	tool = mymeld
-	conflictstyle = diff3
+    tool = mymeld
+    conflictstyle = diff3
 [rebase]
-	pull = preserve
+    pull = preserve
 [mergetool "kdiff3NoAuto"]
-	cmd = kdiff3 --L1 \"$MERGED (Base)\" --L2 \"$MERGED (Local)\" --L3 \"$MERGED (Remote)\" -o \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
+    cmd = kdiff3 --L1 \"$MERGED (Base)\" --L2 \"$MERGED (Local)\" --L3 \"$MERGED (Remote)\" -o \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
 [mergetool "mymeld"]
-	cmd = meld --diff $BASE $LOCAL --diff $BASE $REMOTE --diff $LOCAL $BASE $REMOTE --output $MERGED
+    cmd = meld --diff $BASE $LOCAL --diff $BASE $REMOTE --diff $LOCAL $BASE $REMOTE --output $MERGED
 [branch]
-	autosetuprebase = always
+    autosetuprebase = always
 [core]
-	editor = vim
-	excludesfile = /home/tor59451/.gitignore
-[color "diff"]
-	whitespace = red reverse
+    editor = vim
+    excludesfile = /home/tor59451/.gitignore
+# [color "diff"]
+#     whitespace = red reverse
 [alias]
-lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
-lg2 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-lg3 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
-lg = !"git lg1"
-commit = 'commit --verbose'
+    lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+    lg2 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+    lg3 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+    lg = !"git lg1"
+    hist = log --pretty=format:\"%C(yellow)%h%C(reset) %C(green)%ad%C(reset) %C(red)|%C(reset) %s %C(bold blue)[%an]%C(reset)%C(yellow)%d%C(reset)\" --graph --date=short
+    dt = difftool
+
+[color "status"]
+    added = green
+    changed = yellow bold
+    untracked = red bold
+
+# icdiff is a better diff tool.
+# http://www.jefftk.com/icdiff
+# https://github.com/jeffkaufman/icdiff
+[diff]
+  tool = icdiff
+[difftool]
+  prompt = false
+[difftool "icdiff"]
+  cmd = icdiff --line-numbers $LOCAL $REMOTE
+
 [pager]
-	log = ~/third-party/diff-highlight | less
-	show = ~/third-party/diff-highlight | less
-	diff = ~/third-party/diff-highlight | less
+    log = ~/third-party/diff-highlight | less
+    show = ~/third-party/diff-highlight | less
+    diff = ~/third-party/diff-highlight | less
+    difftool = less -r
+[stash]
+    showPatch = true
+[log]
+    decorate = full
+[commit]
+    verbose = true
