@@ -51,6 +51,8 @@ alias ..='cd ..'
 # Git aliases
 alias gits='git status'
 alias gdc='git diff --cached'
+alias gdt='git difftool'
+alias gdtc='git difftool --cached'
 alias gitf='git fetch'
 alias gita='git add'
 alias gitc='git commit -m'
