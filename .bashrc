@@ -1,9 +1,7 @@
-#fish
-#exit
-
 . ~/third-party/z/z.sh
 . ~/third-party/up/src/.bash_functions
 . ~/third-party/up/completion/up
+source ~/.bash_functions.sh
 
 
 if tty -s
@@ -146,7 +144,7 @@ gh() {
 
 # bind '"\er": redraw-current-line'
 # bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
-bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
+# bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
 # bind '"\C-g\C-t": "$(gt)\e\C-e\er"'
 # bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
 

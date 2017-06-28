@@ -13,3 +13,16 @@ function print_working_copy_branches {
     done
 }
 
+function today {
+    TODAY_DIR="$HOME/today/"
+    DATE_DIR=$(date +'%Y-%m-%d')
+
+    if [ ! -d  $TODAY_DIR$DATE_DIR ];
+    then
+        mkdir -p $TODAY_DIR$DATE_DIR
+    fi;
+
+    echo $TODAY_DIR$DATE_DIR
+}
+
+bind '"\C-g\C-t": "$(today)\e\C-e"'
