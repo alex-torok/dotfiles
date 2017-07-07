@@ -14,12 +14,12 @@ endif
 call plug#begin('~/.vim/plugged')
 " File Switching
 Plug 'vim-scripts/a.vim'
-Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-vinegar'
+" Plug 'scrooloose/nerdtree'
 Plug 'mbbill/undotree'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'tweekmonster/fzf-filemru'
-" Plug 'mhinz/vim-startify'
 
 
 " Searching
@@ -30,6 +30,8 @@ Plug 'majutsushi/tagbar'
 " Editing
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-unimpaired'
+" Plug 'tpope/vim-sleuth'
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'wellle/targets.vim'
 Plug 'rhysd/vim-clang-format'
@@ -42,12 +44,13 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 " Look & Feel
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'Yggdroot/indentLine'
-Plug 'jaxbot/semantic-highlight.vim'
+" Plug 'bling/vim-bufferline'
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
+" Plug 'Yggdroot/indentLine'
+" Plug 'jaxbot/semantic-highlight.vim'
 Plug 'sheerun/vim-polyglot'
-Plug 'kien/rainbow_parentheses.vim'
+Plug 'junegunn/rainbow_parentheses.vim'
 
 " Colorschemes! 
 Plug 'bcicen/vim-vice'
@@ -69,6 +72,7 @@ Plug 'tpope/vim-repeat'
 Plug 'unblevable/quick-scope'
 Plug 'AndrewRadev/linediff.vim'
 Plug 'nickhutchinson/vim-cmake-syntax'
+Plug 'tpope/vim-eunuch'
 " Plug 'junegunn/vim-peekaboo'
 
 call plug#end()
@@ -138,10 +142,12 @@ nnoremap <Leader>t :TagbarToggle<CR>
 :nnoremap <Leader>q :Bdelete<CR>
 " }}}
 " Rainbow Parenthesis {{{
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
+let g:rainbow#max_level = 16
+let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
+augroup rainbow_lisp
+    autocmd!
+    autocmd FileType lisp,clojure,scheme,cpp RainbowParentheses
+augroup END
 " }}}
 " tpope/commentary {{{
 autocmd FileType cmake setlocal commentstring=#%s
@@ -214,7 +220,7 @@ set wildchar=<Tab>
 set wildmode=full
 
 " show vertical line at 81 characters
-set colorcolumn=81
+set colorcolumn=80
 
 " 4 spaces for indentation
 set tabstop=4
@@ -237,7 +243,7 @@ set scrolloff=8
 set sidescrolloff=10
 
 " Enable statusline
-set laststatus=2
+" set laststatus=2
 
 " Show tabs and trailing whitespace
 set list
@@ -260,6 +266,7 @@ set ttimeout
 set ttimeoutlen=100
 
 "Show line numbers
+set relativenumber
 set number
 
 " Mouse mode
@@ -351,6 +358,7 @@ aug END
 autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
 autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
 let g:clang_format#command = "clang-format-3.8"
+let g:clang_format#detect_style_file = 1
 " }}}
 
 " vim:foldmethod=marker:foldlevel=0
