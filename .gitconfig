@@ -40,6 +40,7 @@
 # https://github.com/jeffkaufman/icdiff
 [diff]
   tool = icdiff
+	algorithm = patience
 [difftool]
   prompt = false
 [difftool "icdiff"]
