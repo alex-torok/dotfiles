@@ -100,7 +100,11 @@ ninja_target_fzf() {
   ninja -t targets all | cut -d: -f1 |
   fzf-tmux
 }
-bind '"\C-g\C-n": "$(ninja_target_fzf)\e\C-e\er"'
+# add a binding if we are in an interactive shell
+if [[ $- =~ i ]]; then
+    bind '"\C-g\C-n": "$(ninja_target_fzf)\e\C-e\er"'
+fi
+
 
 # GIT heart FZF - Courtesy of junegunn
 # -------------

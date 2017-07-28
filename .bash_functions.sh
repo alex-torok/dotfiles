@@ -25,4 +25,7 @@ function today {
     echo $TODAY_DIR$DATE_DIR
 }
 
-bind '"\C-g\C-t": "$(today)\e\C-e"'
+# add a binding if we are in an interactive shell
+if [[ $- =~ i ]]; then
+    bind '"\C-g\C-t": "$(today)\e\C-e"'
+fi
