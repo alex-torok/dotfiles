@@ -3,8 +3,8 @@ function source_if_exists () {
 }
 
 # ssh stuff because Mike is a butt
-eval `ssh-agent -s` 2>&1 > /dev/null
-ssh-add -k ~/.ssh/id_rsa 2>&1 > /dev/null
+eval `ssh-agent -s` &> /dev/null
+ssh-add -k ~/.ssh/id_rsa &> /dev/null
 
 
 . ~/third-party/z/z.sh
