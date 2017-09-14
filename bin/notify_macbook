@@ -1,0 +1,3 @@
+#!/bin/bash
+MSG=${@:-"Job complete"}
+ssh alextorok@alexs-mbp-2.ds.jdsu.net "/usr/local/bin/terminal-notifier -message '${MSG}' -sender Finder -sound Default"
