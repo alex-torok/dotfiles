@@ -71,9 +71,13 @@ Plug 'vim-scripts/vim-auto-save'
 Plug 'tpope/vim-repeat'
 Plug 'unblevable/quick-scope'
 Plug 'AndrewRadev/linediff.vim'
-Plug 'nickhutchinson/vim-cmake-syntax'
 Plug 'tpope/vim-eunuch'
 " Plug 'junegunn/vim-peekaboo'
+
+" Code Syntaxes
+Plug 'nickhutchinson/vim-cmake-syntax'
+Plug 'martinda/Jenkinsfile-vim-syntax'
+Plug 'Glench/Vim-Jinja2-Syntax'
 
 call plug#end()
 " }}}
@@ -150,7 +154,9 @@ augroup rainbow_lisp
 augroup END
 " }}}
 " tpope/commentary {{{
-autocmd FileType cmake setlocal commentstring=#%s
+autocmd FileType * set commentstring=#\ %s
+autocmd FileType cmake let b:commentary_format='# %s'
+autocmd FileType jinja let b:commentary_format='{# %s #}'
 "}}}
 " Undo Tree {{{
 nnoremap <Leader>u :UndotreeToggle<CR>:UndotreeFocus <CR>
@@ -341,6 +347,7 @@ endif
 source ~/.cscope_maps.vim
 " }}}
 " Autocommands {{{
+autocmd BufNewFile,BufRead *.sls set syntax=yaml
 
 " Highlight cursorline only in active window
 aug CursorLine

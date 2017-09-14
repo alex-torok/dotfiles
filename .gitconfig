@@ -8,6 +8,7 @@
     conflictstyle = diff3
 [rebase]
     pull = preserve
+	autoStash = true
 [mergetool "kdiff3NoAuto"]
     cmd = kdiff3 --L1 \"$MERGED (Base)\" --L2 \"$MERGED (Local)\" --L3 \"$MERGED (Remote)\" -o \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
 [mergetool "mymeld"]
@@ -41,6 +42,7 @@
 [diff]
   tool = icdiff
 	algorithm = patience
+    indentHeuristic = on
 [difftool]
   prompt = false
 [difftool "icdiff"]
@@ -57,3 +59,5 @@
     decorate = full
 [commit]
     verbose = true
+[color]
+	ui = auto

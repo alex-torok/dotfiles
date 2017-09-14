@@ -1,7 +1,16 @@
+function source_if_exists () {
+    [ -f $1 ] && source $1
+}
+
+# ssh stuff because Mike is a butt
+eval `ssh-agent -s` 2>&1 > /dev/null
+ssh-add -k ~/.ssh/id_rsa 2>&1 > /dev/null
+
+
 . ~/third-party/z/z.sh
 . ~/third-party/up/src/.bash_functions
 . ~/third-party/up/completion/up
-source ~/.bash_functions.sh
+. ~/.bash_functions.sh
 
 
 if tty -s
@@ -26,6 +35,11 @@ then
     stty -ixon
 fi
 
+function httpserver () {
+    local port=${1:-8081}
+    python -m SimpleHTTPServer ${port}
+}
+
 function parse_git_branch () {
     __git_ps1 | sed -r 's_ \((.+)\)_\1_'
 }
@@ -33,7 +47,7 @@ function parse_git_age () {
 git log -n1 --format="%ar" 2> /dev/null | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/'
 }
 
-export PS1="${BOLD}\t ${NORMAL}[\u@\h] ${BOLD}${WHITE}(\$(parse_git_branch) - \$(parse_git_age)) \
+export PS1="${BOLD}\t ${NORMAL}[\u@${BLUE}\h${WHITE}] ${BOLD}${WHITE}(\$(parse_git_branch) - \$(parse_git_age)) \
 ${NORMAL}${GREEN}\w\\n${BOLD}${RED}\$${NORMAL} "
 
 # cpp and h cscope
