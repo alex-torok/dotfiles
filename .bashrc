@@ -87,15 +87,6 @@ function scpi {
     scpiclient --ip $1 --port $port
 }
 
-PATH="/home/tor59451/perl5/bin${PATH+:}${PATH}"; export PATH;
-PERL5LIB="/home/tor59451/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="/home/tor59451/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"/home/tor59451/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=/home/tor59451/perl5"; export PERL_MM_OPT;
-
-alias debugperl='perl -d:Ptkdb'
-
-
 . $HOME/.shellrc.load
 
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
