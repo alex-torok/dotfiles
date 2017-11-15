@@ -11,6 +11,15 @@ ssh-add -k ~/.ssh/id_rsa &> /dev/null
 . ~/third-party/up/src/.bash_functions
 . ~/third-party/up/completion/up
 . ~/.bash_functions.sh
+if [[ `uname` == 'Linux' ]]; then
+    PATH="$HOME/bin/linux:${PATH}"
+fi
+
+function pet-select() {
+  BUFFER=$(pet search --query "$READLINE_LINE")
+  READLINE_LINE=$BUFFER
+  READLINE_POINT=${#BUFFER}
+}
 
 
 if tty -s
@@ -91,7 +100,7 @@ function scpi {
 
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_CTRL_T_OPTS="--preview '(coderay {} || cat {} || tree -C {}) 2> /dev/null | head -$LINES'"
+export FZF_CTRL_T_OPTS="--preview '(cat -n {} || tree -C {}) 2> /dev/null | head -$LINES'"
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden --bind ?:toggle-preview"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
@@ -105,9 +114,11 @@ ninja_target_fzf() {
   ninja -t targets all | cut -d: -f1 |
   fzf-tmux
 }
-# add a binding if we are in an interactive shell
+
+# Binds
 if [[ $- =~ i ]]; then
     bind '"\C-g\C-n": "$(ninja_target_fzf)\e\C-e\er"'
+    bind -x '"\C-g\C-p": pet-select'
 fi
 
 

@@ -23,11 +23,12 @@ Plug 'tweekmonster/fzf-filemru'
 
 
 " Searching
-Plug 'majutsushi/tagbar'
+" Plug 'majutsushi/tagbar'
 " Plug 'rking/ag.vim'
 " Plug 'Chun-Yang/vim-action-ag'
 
 " Editing
+Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-unimpaired'
@@ -48,9 +49,10 @@ Plug 'airblade/vim-gitgutter'
 " Plug 'vim-airline/vim-airline'
 " Plug 'vim-airline/vim-airline-themes'
 " Plug 'Yggdroot/indentLine'
-" Plug 'jaxbot/semantic-highlight.vim'
+Plug 'jaxbot/semantic-highlight.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/rainbow_parentheses.vim'
+Plug 'tpope/vim-markdown'
 
 " Colorschemes! 
 Plug 'bcicen/vim-vice'
@@ -78,6 +80,7 @@ Plug 'tpope/vim-eunuch'
 Plug 'nickhutchinson/vim-cmake-syntax'
 Plug 'martinda/Jenkinsfile-vim-syntax'
 Plug 'Glench/Vim-Jinja2-Syntax'
+Plug 'vim-scripts/txt.vim'
 
 call plug#end()
 " }}}
@@ -106,7 +109,6 @@ highlight link GitGutterDeleteLine NONE
 " augroup END
 
 "}}}
-"
 " Ulti-snips {{{
 
 " " " Trigger configuration. Do not use <tab> if you use
@@ -156,6 +158,7 @@ augroup END
 " tpope/commentary {{{
 autocmd FileType * set commentstring=#\ %s
 autocmd FileType cmake let b:commentary_format='# %s'
+autocmd FileType groovy let b:commentary_format='// %s'
 autocmd FileType jinja let b:commentary_format='{# %s #}'
 "}}}
 " Undo Tree {{{
@@ -308,6 +311,9 @@ nnoremap <Leader>tw :Chomp<CR>
 " Make Y behave like other commands
 nnoremap Y y$
 
+" Navigate to a buffer
+nnoremap gb :ls<CR>:buffer<Space>
+
 " Highlight our current line
 set cursorline
 
@@ -349,6 +355,8 @@ source ~/.cscope_maps.vim
 " Autocommands {{{
 autocmd BufNewFile,BufRead *.sls set syntax=yaml
 
+au BufRead,BufNewFile grains set syntax=yaml
+
 " Highlight cursorline only in active window
 aug CursorLine
     autocmd!
@@ -357,6 +365,11 @@ aug CursorLine
     autocmd BufWinEnter * setl cursorline
     autocmd WinLeave * setl nocursorline
 aug END
+
+"Markdown settings
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
+let g:markdown_syntax_conceal = 0
 
 " }}}
 " clang-format {{{
@@ -367,5 +380,4 @@ autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
 let g:clang_format#command = "clang-format-3.8"
 let g:clang_format#detect_style_file = 1
 " }}}
-
 " vim:foldmethod=marker:foldlevel=0

@@ -29,7 +29,7 @@
     dt = difftool
 
 [status]
-    showUntrackedFiles = all
+    showUntrackedFiles = normal
 
 [color "status"]
     added = green
