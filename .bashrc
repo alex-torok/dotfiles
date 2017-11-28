@@ -46,6 +46,8 @@ fi
 
 function httpserver () {
     local port=${1:-8081}
+    local hostname=`hostname`
+    echo "Starting http server at ${hostname}:${port}"
     python -m SimpleHTTPServer ${port}
 }
 
