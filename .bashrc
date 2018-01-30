@@ -51,14 +51,18 @@ function httpserver () {
     python -m SimpleHTTPServer ${port}
 }
 
+function git_ps2_string () {
+    git rev-parse --git-dir > /dev/null 2>&1 || exit
+    echo " ($(parse_git_branch) - $(parse_git_age))"
+}
 function parse_git_branch () {
     __git_ps1 | sed -r 's_ \((.+)\)_\1_'
 }
 function parse_git_age () {
-git log -n1 --format="%ar" 2> /dev/null | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/'
+    git rev-list -n1 --format="%ar" HEAD | tail -n1 | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/'
 }
 
-export PS1="${BOLD}\t ${NORMAL}[\u@${BLUE}\h${WHITE}] ${BOLD}${WHITE}(\$(parse_git_branch) - \$(parse_git_age)) \
+export PS1="${BOLD}\t ${NORMAL}[\u@${BLUE}\h${WHITE}]${BOLD}${WHITE}\$(git_ps2_string) \
 ${NORMAL}${GREEN}\w\\n${BOLD}${RED}\$${NORMAL} "
 
 # cpp and h cscope

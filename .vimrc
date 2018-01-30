@@ -156,7 +156,7 @@ augroup rainbow_lisp
 augroup END
 " }}}
 " tpope/commentary {{{
-autocmd FileType * set commentstring=#\ %s
+" autocmd FileType * set commentstring=#\ %s
 autocmd FileType cmake let b:commentary_format='# %s'
 autocmd FileType groovy let b:commentary_format='// %s'
 autocmd FileType jinja let b:commentary_format='{# %s #}'
@@ -377,7 +377,7 @@ let g:markdown_syntax_conceal = 0
 " map to <Leader>cf in C++ code
 autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
 autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
-let g:clang_format#command = "clang-format-3.8"
+let g:clang_format#command = "clang-format"
 let g:clang_format#detect_style_file = 1
 " }}}
 " vim:foldmethod=marker:foldlevel=0
