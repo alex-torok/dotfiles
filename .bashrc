@@ -2,12 +2,28 @@ function source_if_exists () {
     [ -f $1 ] && source $1
 }
 
-# ssh stuff because Mike is a butt
-eval `ssh-agent -s` &> /dev/null
-ssh-add -k ~/.ssh/id_rsa &> /dev/null
+# if [ -z "$SSH_AUTH_SOCK" ] && [ -z "$TMUX" ]; then
+#     eval `ssh-agent -s` &> /dev/null
+#     ssh-add -k ~/.ssh/id_rsa &> /dev/null
+# fi
+# if [[ -S "$SSH_AUTH_SOCK" && ! -h "$SSH_AUTH_SOCK" ]]; then
+#     ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock;
+# fi
+# export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock;
+
+man() {
+    env \
+    LESS_TERMCAP_mb="$(printf "\e[1;31m")" \
+    LESS_TERMCAP_md="$(printf "\e[1;31m")" \
+    LESS_TERMCAP_me="$(printf "\e[0m")" \
+    LESS_TERMCAP_se="$(printf "\e[0m")" \
+    LESS_TERMCAP_so="$(printf "\e[1;44;33m")" \
+    LESS_TERMCAP_ue="$(printf "\e[0m")" \
+    LESS_TERMCAP_us="$(printf "\e[1;32m")" \
+    man "${@}"
+}
 
 
-. ~/third-party/z/z.sh
 . ~/third-party/up/src/.bash_functions
 . ~/third-party/up/completion/up
 . ~/.bash_functions.sh

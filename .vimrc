@@ -26,6 +26,7 @@ Plug 'tweekmonster/fzf-filemru'
 " Plug 'majutsushi/tagbar'
 " Plug 'rking/ag.vim'
 " Plug 'Chun-Yang/vim-action-ag'
+Plug 'haya14busa/incsearch.vim'
 
 " Editing
 Plug 'tpope/vim-abolish'
@@ -77,6 +78,7 @@ Plug 'tpope/vim-eunuch'
 " Plug 'junegunn/vim-peekaboo'
 
 " Code Syntaxes
+Plug 'mfukar/robotframework-vim'
 Plug 'nickhutchinson/vim-cmake-syntax'
 Plug 'martinda/Jenkinsfile-vim-syntax'
 Plug 'Glench/Vim-Jinja2-Syntax'
@@ -160,6 +162,7 @@ augroup END
 autocmd FileType cmake let b:commentary_format='# %s'
 autocmd FileType groovy let b:commentary_format='// %s'
 autocmd FileType jinja let b:commentary_format='{# %s #}'
+autocmd FileType robot let b:commentary_format='# %s'
 "}}}
 " Undo Tree {{{
 nnoremap <Leader>u :UndotreeToggle<CR>:UndotreeFocus <CR>
@@ -221,6 +224,23 @@ nnoremap <Leader>m :NERDTreeToggle<CR>
 
 let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,11,13,15,46,51,199]
 nnoremap <Leader>s :SemanticHighlightToggle<cr>
+" }}}
+" Search settings {{{
+set incsearch
+set ignorecase
+set hlsearch
+
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+
+let g:incsearch#auto_nohlsearch = 1
+map n  <Plug>(incsearch-nohl-n)
+map N  <Plug>(incsearch-nohl-N)
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
 " }}}
 " Vim Settings {{{
 " autocomplete in the command menu
@@ -284,11 +304,6 @@ if &term =~ '^screen'
     " tmux knows the extended mouse mode
     set ttymouse=xterm2
 endif
-
-" Live search
-set incsearch
-set ignorecase
-set hlsearch
 
 " split views go below or to the right
 set splitright
