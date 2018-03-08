@@ -272,7 +272,7 @@ set scrolloff=8
 set sidescrolloff=10
 
 " Enable statusline
-" set laststatus=2
+set laststatus=2
 
 " Show tabs and trailing whitespace
 set list
