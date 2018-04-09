@@ -60,6 +60,12 @@ then
     stty -ixon
 fi
 
+function hostname_color(){
+    number=$(echo $HOSTNAME | md5sum | sed 's/[^0-9]*//g')
+    color=$(($number % 6 * 8 + 1))
+    echo -e "$(tput setaf ${color#-})"
+}
+
 function httpserver () {
     local port=${1:-8081}
     local hostname=`hostname`
@@ -78,7 +84,7 @@ function parse_git_age () {
     git rev-list -n1 --format="%ar" HEAD | tail -n1 | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/'
 }
 
-export PS1="${BOLD}\t ${NORMAL}[\u@${BLUE}\h${WHITE}]${BOLD}${WHITE}\$(git_ps2_string) \
+export PS1="${BOLD}\t ${NORMAL}[\u@${BOLD}\$(hostname_color)\h${NORMAL}${WHITE}]${BOLD}${WHITE}\$(git_ps2_string) \
 ${NORMAL}${GREEN}\w\\n${BOLD}${RED}\$${NORMAL} "
 
 # cpp and h cscope
