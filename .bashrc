@@ -62,7 +62,7 @@ fi
 
 function hostname_color(){
     number=$(echo $HOSTNAME | md5sum | sed 's/[^0-9]*//g')
-    color=$(($number % 6 * 8 + 1))
+    color=$(($number % 6 + 1))
     echo -e "$(tput setaf ${color#-})"
 }
 
