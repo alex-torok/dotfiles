@@ -60,9 +60,25 @@ then
     stty -ixon
 fi
 
-function hostname_color(){
-    number=$(echo $HOSTNAME | md5sum | sed 's/[^0-9]*//g')
-    color=$(($number % 6 + 1))
+function short_numerical_sum(){
+    number=$(echo $1 | md5sum | sed 's/[^0-9]*//g')
+    number=${number:0:10}
+    echo ${number#0} | sed 's/^0*//'
+}
+
+function decorate_hostname(){
+    number=$(short_numerical_sum $HOSTNAME)
+    color=$(($number % 7 + 1))
+    number=$(short_numerical_sum $number)
+    underline=$(($number % 2 ))
+    number=$(short_numerical_sum $number)
+    bold=$(($number % 2 ))
+    if [[ "$bold" -eq 1 ]]; then
+        echo -en "$(tput bold)"
+    fi
+    if [[ "$underline" -eq 1 ]]; then
+        echo -en "$(tput smul)"
+    fi
     echo -e "$(tput setaf ${color#-})"
 }
 
@@ -84,7 +100,7 @@ function parse_git_age () {
     git rev-list -n1 --format="%ar" HEAD | tail -n1 | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/'
 }
 
-export PS1="${BOLD}\t ${NORMAL}[\u@${BOLD}\$(hostname_color)\h${NORMAL}${WHITE}]${BOLD}${WHITE}\$(git_ps2_string) \
+export PS1="${BOLD}\t ${NORMAL}[\u@\$(decorate_hostname)\h${NORMAL}${WHITE}]${BOLD}${WHITE}\$(git_ps2_string) \
 ${NORMAL}${GREEN}\w\\n${BOLD}${RED}\$${NORMAL} "
 
 # cpp and h cscope
