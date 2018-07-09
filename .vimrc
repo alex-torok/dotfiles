@@ -29,6 +29,7 @@ Plug 'tweekmonster/fzf-filemru'
 Plug 'haya14busa/incsearch.vim'
 
 " Editing
+Plug 'w0rp/ale'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
@@ -89,6 +90,12 @@ call plug#end()
 " Map Leader {{{
 let mapleader = "\<Space>"
 " }}}
+" ALE (Async Lint Engine) {{{
+let b:ale_linters = {
+\ 'python': ['pyflakes'],
+\ 'yaml': ['yamllint'],
+\ 'dockerfile': ['hadolint'] }
+" }}}
 " Git Gutter {{{
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0
@@ -148,6 +155,8 @@ nnoremap <Leader>t :TagbarToggle<CR>
 " }}}
 " vim-bbye {{{
 :nnoremap <Leader>q :Bdelete<CR>
+autocmd FileType netrw setl bufhidden=delete
+autocmd FileType netrw :nnoremap <buffer> <Leader>q :bn<CR>
 " }}}
 " Rainbow Parenthesis {{{
 let g:rainbow#max_level = 16
@@ -371,6 +380,9 @@ source ~/.cscope_maps.vim
 autocmd BufNewFile,BufRead *.sls set syntax=yaml
 
 au BufRead,BufNewFile grains set syntax=yaml
+
+autocmd FileType markdown setlocal textwidth=80
+autocmd FileType markdown setlocal wrapmargin=2
 
 " Highlight cursorline only in active window
 aug CursorLine
