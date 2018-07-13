@@ -91,7 +91,7 @@ call plug#end()
 let mapleader = "\<Space>"
 " }}}
 " ALE (Async Lint Engine) {{{
-let b:ale_linters = {
+let g:ale_linters = {
 \ 'python': ['pyflakes'],
 \ 'yaml': ['yamllint'],
 \ 'dockerfile': ['hadolint'] }
@@ -377,7 +377,10 @@ endif
 source ~/.cscope_maps.vim
 " }}}
 " Autocommands {{{
-autocmd BufNewFile,BufRead *.sls set syntax=yaml
+
+" Weird file extensions
+autocmd BufNewFile,BufRead *.sls set ft=yaml
+autocmd BufNewFile,BufRead Dockerfile* set ft=dockerfile
 
 au BufRead,BufNewFile grains set syntax=yaml
 
