@@ -15,7 +15,7 @@ call plug#begin('~/.vim/plugged')
 " File Switching
 Plug 'vim-scripts/a.vim'
 Plug 'tpope/vim-vinegar'
-" Plug 'scrooloose/nerdtree'
+Plug 'wincent/ferret'
 Plug 'mbbill/undotree'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --bin' }
 Plug 'junegunn/fzf.vim'
@@ -45,16 +45,18 @@ Plug 'rhysd/vim-clang-format'
 " External Integrations
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
+Plug 'shime/vim-livedown'
 
 " Look & Feel
 " Plug 'bling/vim-bufferline'
 " Plug 'vim-airline/vim-airline'
 " Plug 'vim-airline/vim-airline-themes'
-" Plug 'Yggdroot/indentLine'
+Plug 'Yggdroot/indentLine'
 Plug 'jaxbot/semantic-highlight.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/rainbow_parentheses.vim'
-Plug 'tpope/vim-markdown'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 
 " Colorschemes! 
 Plug 'bcicen/vim-vice'
@@ -94,12 +96,23 @@ let mapleader = "\<Space>"
 let g:ale_linters = {
 \ 'python': ['pyflakes'],
 \ 'yaml': ['yamllint'],
-\ 'dockerfile': ['hadolint'] }
+\ 'dockerfile': ['hadolint'],
+\ 'tcl': ['nagelfar'],
+\ 'cpp': ['cppcheck', 'clangcheck', 'flawfinder'] }
+
+let g:ale_c_build_dir_names = ["build/mts-5800-app-arm-cortex-a9"]
+let g:ale_tcl_nagelfar_executable = "nagelfar"
+" Disable Warnings and 'N'? errors
+let g:ale_tcl_nagelfar_options = "-filter '*N *' -filter '*W *'"
+autocmd FileType tcl setlocal ale_open_list = 1
+
+nmap <silent> ]w <Plug>(ale_next_wrap)
+nmap <silent> [w <Plug>(ale_previous_wrap)
 " }}}
 " Git Gutter {{{
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0
-let g:gitgutter_sign_column_always = 1
+set signcolumn=yes
 " let g:gitgutter_highlight_lines = 1
 let g:gitgutter_diff_args = '-w'
 
@@ -193,6 +206,10 @@ let g:molokai_original = 1
 
 color molokai
 " }}}
+" vim-markdown {{{
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_folding_disabled = 1
+" }}}
 " a.vim {{{
 nnoremap <Leader><Tab>  :A<cr>
 " a.vim has some really dumb mappings that we need to remove, but we need
@@ -204,14 +221,6 @@ autocmd VimEnter * :iunmap <Space>ih
 autocmd VimEnter * :nunmap <Space>ihn
 autocmd VimEnter * :nunmap <Space>is
 autocmd VimEnter * :nunmap <Space>ih
-" }}}
-" vim-tmux-navigator {{{
-let g:tmux_navigator_no_mappings = 1
-
-nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
-nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
-nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
-nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
 " }}}
 " Autosave {{{
 
@@ -334,6 +343,7 @@ nnoremap <Leader>tw :Chomp<CR>
 
 " Make Y behave like other commands
 nnoremap Y y$
+vnoremap Y :w !ssh macbook pbcopy<CR>
 
 " Navigate to a buffer
 nnoremap gb :ls<CR>:buffer<Space>
@@ -381,6 +391,7 @@ source ~/.cscope_maps.vim
 " Weird file extensions
 autocmd BufNewFile,BufRead *.sls set ft=yaml
 autocmd BufNewFile,BufRead Dockerfile* set ft=dockerfile
+autocmd BufNewFile,BufRead Jenkinsfile* set ft=Jenkinsfile
 
 au BufRead,BufNewFile grains set syntax=yaml
 
