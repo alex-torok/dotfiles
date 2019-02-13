@@ -3,44 +3,28 @@
 # Generates a semi-random number seeded off of the input parameter
 function short_checksum(){
     number=$(echo $1 | md5sum | sed 's/[^0-9]*//g')
-    number=${number:0:10}
+    number=${number:0:4}
     echo ${number#0} | sed 's/^0*//'
 }
-
-# Generates a semi-random number seeded off of the machine hostname with the
-# input parameter used as the index of the random number to pull
-function get_hostname_checksum(){
-    times=$1
-    checksum="$(short_checksum $HOSTNAME)"
-    for n in `seq $times`; do
-        checksum="$(short_checksum $checksum)"
-    done
-    echo $checksum
-}
-
 
 function get_hostname_color(){
     # small subset of 256 color pallate that looks good on a dark-blue-ish colorscheme
     # picked using `for i in `seq 1 15`; do echo -e "$(tput setaf $i) $i"; done`
     colors=(1 2 3 6 7 9 10 11 12 13 14 15)
 
-    checksum=$(get_hostname_checksum 0)
-    color_index=$(($checksum % ${#colors[*]} + 1))
+    color_index=$(($RANDOM % ${#colors[*]} + 1))
     echo -en "$(tput setaf ${colors[$color_index]})"
-    # echo ${colors[$color_index]}
 }
 
 function get_hostname_underline(){
-    checksum=$(get_hostname_checksum 1)
-    underline=$(($checksum % 2 ))
+    underline=$(($RANDOM % 2 ))
     if [[ "$underline" -eq 1 ]]; then
         echo -en "$(tput smul)"
     fi
 }
 
 function get_hostname_bold(){
-    checksum=$(get_hostname_checksum 2)
-    bold=$(($checksum % 2 ))
+    bold=$(($RANDOM % 2 ))
     if [[ "$bold" -eq 1 ]]; then
         echo -en "$(tput bold)"
     fi
@@ -51,15 +35,17 @@ function get_hostname_emoji(){
     # picked using `for i in `seq 1 15`; do echo -e "$(tput setaf $i) $i"; done`
     emoji=(🍉 🥑 🌶  🍖 🍕 🍣 🍿 🍺 🍭☕️)
 
-    checksum=$(get_hostname_checksum 3)
-    emoji_index=$(($checksum % ${#emoji[*]} + 1))
+    emoji_index=$(($RANDOM % ${#emoji[*]} + 1))
     echo -en "${emoji[$emoji_index]}"
 }
 
 function decorated_hostname(){
+    # Bashr $RANDOM can be seeded by setting a value to it
+    RANDOM="$(short_checksum $HOSTNAME)"
     get_hostname_emoji
     get_hostname_underline
     get_hostname_bold
     get_hostname_color
     echo -en $HOSTNAME
+    unset RANDOM
 }
