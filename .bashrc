@@ -61,7 +61,7 @@ function parse_git_age () {
     git rev-list -n1 --format="%ar" HEAD | tail -n1 | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/'
 }
 
-export PS1="${BOLD}\t ${NORMAL}[\u@\$(decorate_hostname)\h${NORMAL}${WHITE}]${BOLD}${WHITE}\$(git_ps2_string) \
+export PS1="${BOLD}\t ${NORMAL}[\u\$(decorated_hostname)${NORMAL}${WHITE}]${BOLD}${WHITE}\$(git_ps2_string) \
 ${NORMAL}${GREEN}\w\\n${BOLD}${KEY_ORANGE}\$${NORMAL} "
 
 # cpp and h cscope

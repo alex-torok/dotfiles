@@ -18,6 +18,7 @@ function get_hostname_checksum(){
     echo $checksum
 }
 
+
 function get_hostname_color(){
     # small subset of 256 color pallate that looks good on a dark-blue-ish colorscheme
     # picked using `for i in `seq 1 15`; do echo -e "$(tput setaf $i) $i"; done`
@@ -25,7 +26,7 @@ function get_hostname_color(){
 
     checksum=$(get_hostname_checksum 0)
     color_index=$(($checksum % ${#colors[*]} + 1))
-    echo -e "$(tput setaf ${colors[$color_index]})"
+    echo -en "$(tput setaf ${colors[$color_index]})"
     # echo ${colors[$color_index]}
 }
 
@@ -45,8 +46,20 @@ function get_hostname_bold(){
     fi
 }
 
-function decorate_hostname(){
+function get_hostname_emoji(){
+    # small subset of 256 color pallate that looks good on a dark-blue-ish colorscheme
+    # picked using `for i in `seq 1 15`; do echo -e "$(tput setaf $i) $i"; done`
+    emoji=(🍉 🥑 🌶  🍖 🍕 🍣 🍿 🍺 🍭☕️)
+
+    checksum=$(get_hostname_checksum 3)
+    emoji_index=$(($checksum % ${#emoji[*]} + 1))
+    echo -en "${emoji[$emoji_index]}"
+}
+
+function decorated_hostname(){
+    get_hostname_emoji
     get_hostname_underline
     get_hostname_bold
     get_hostname_color
+    echo -en $HOSTNAME
 }
