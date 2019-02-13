@@ -40,9 +40,13 @@ function get_hostname_emoji(){
 }
 
 function decorated_hostname(){
-    # Bashr $RANDOM can be seeded by setting a value to it
+    # Bash $RANDOM can be seeded by setting a value to it
     RANDOM="$(short_checksum $HOSTNAME)"
     get_hostname_emoji
+    # Most of the machines that I work on have unicode 8 support in their
+    # locale configuration, which leads to emoji being considered as one
+    # character wide. Add a space after the emoji so that the hostname isn't
+    # overlapping with the emoji
     echo -en " "
     get_hostname_underline
     get_hostname_bold
