@@ -12,7 +12,7 @@ function get_hostname_color(){
     # picked using `for i in `seq 1 15`; do echo -e "$(tput setaf $i) $i"; done`
     colors=(1 2 3 6 7 9 10 11 12 13 14 15)
 
-    color_index=$(($RANDOM % ${#colors[*]} + 1))
+    color_index=$(($RANDOM % ${#colors[*]}))
     echo -en "$(tput setaf ${colors[$color_index]})"
 }
 
@@ -33,9 +33,9 @@ function get_hostname_bold(){
 function get_hostname_emoji(){
     # small subset of 256 color pallate that looks good on a dark-blue-ish colorscheme
     # picked using `for i in `seq 1 15`; do echo -e "$(tput setaf $i) $i"; done`
-    emoji=(🍉 🥑 🌶  🍖 🍕 🍣 🍿 🍺 🍭)
+    emoji=(🍉 🥑 🌶 🍖 🍕 🍣 🍿 🍺 🍭)
 
-    emoji_index=$(($RANDOM % ${#emoji[*]} + 1))
+    emoji_index=$(($RANDOM % ${#emoji[*]}))
     echo -en "${emoji[$emoji_index]}"
 }
 
