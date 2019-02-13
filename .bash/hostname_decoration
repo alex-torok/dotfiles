@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Generates a semi-random number seeded off of the input parameter
+function short_checksum(){
+    number=$(echo $1 | md5sum | sed 's/[^0-9]*//g')
+    number=${number:0:10}
+    echo ${number#0} | sed 's/^0*//'
+}
+
+# Generates a semi-random number seeded off of the machine hostname with the
+# input parameter used as the index of the random number to pull
+function get_hostname_checksum(){
+    times=$1
+    checksum="$(short_checksum $HOSTNAME)"
+    for n in `seq $times`; do
+        checksum="$(short_checksum $checksum)"
+    done
+    echo $checksum
+}
+
+function get_hostname_color(){
+    # small subset of 256 color pallate that looks good on a dark-blue-ish colorscheme
+    # picked using `for i in `seq 1 15`; do echo -e "$(tput setaf $i) $i"; done`
+    colors=(1 2 3 6 7 9 10 11 12 13 14 15)
+
+    checksum=$(get_hostname_checksum 0)
+    color_index=$(($checksum % ${#colors[*]} + 1))
+    echo -e "$(tput setaf ${colors[$color_index]})"
+    # echo ${colors[$color_index]}
+}
+
+function get_hostname_underline(){
+    checksum=$(get_hostname_checksum 1)
+    underline=$(($checksum % 2 ))
+    if [[ "$underline" -eq 1 ]]; then
+        echo -en "$(tput smul)"
+    fi
+}
+
+function get_hostname_bold(){
+    checksum=$(get_hostname_checksum 2)
+    bold=$(($checksum % 2 ))
+    if [[ "$bold" -eq 1 ]]; then
+        echo -en "$(tput bold)"
+    fi
+}
+
+function decorate_hostname(){
+    get_hostname_underline
+    get_hostname_bold
+    get_hostname_color
+}
