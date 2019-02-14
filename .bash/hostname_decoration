@@ -10,7 +10,7 @@ function short_checksum(){
 function get_hostname_color(){
     # small subset of 256 color pallate that looks good on a dark-blue-ish colorscheme
     # picked using `for i in `seq 1 15`; do echo -e "$(tput setaf $i) $i"; done`
-    colors=(1 2 3 6 7 9 10 11 12 13 14 15)
+    colors=(1 2 3 6 9 10 11 12 13 14 201 208)
 
     color_index=$(($RANDOM % ${#colors[*]}))
     echo -en "$(tput setaf ${colors[$color_index]})"
