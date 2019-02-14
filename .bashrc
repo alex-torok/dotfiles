@@ -23,10 +23,16 @@ man() {
     man "${@}"
 }
 
+alias clipboard="ssh macbook pbcopy"
 
-. ~/third-party/up/src/.bash_functions
-. ~/third-party/up/completion/up
-. ~/.bash_functions.sh
+source ~/third-party/git-prompt.sh
+source ~/third-party/up/src/.bash_functions
+source ~/third-party/up/completion/up
+source ~/.bash_functions.sh
+
+source ~/.bash/colors
+source ~/.bash/hostname_decoration
+
 if [[ `uname` == 'Linux' ]]; then
     PATH="$HOME/bin/linux:${PATH}"
 fi
@@ -35,51 +41,6 @@ function pet-select() {
   BUFFER=$(pet search --query "$READLINE_LINE")
   READLINE_LINE=$BUFFER
   READLINE_POINT=${#BUFFER}
-}
-
-
-if tty -s
-then
-    BLACK="\[$(tput setaf 0)\]"
-    RED="\[$(tput setaf 1)\]"
-    GREEN="\[$(tput setaf 2)\]"
-    YELLOW="\[$(tput setaf 3)\]"
-    BLUE="\[$(tput setaf 4)\]"
-    MAGENTA="\[$(tput setaf 5)\]"
-    CYAN="\[$(tput setaf 6)\]"
-    WHITE="\[$(tput setaf 7)\]"
-    LIME_YELLOW="\[$(tput setaf 190)\]"
-    POWDER_BLUE="\[$(tput setaf 153)\]"
-    BOLD="\[$(tput bold)\]"
-    NORMAL="\[$(tput sgr0)\]"
-    BLINK="\[$(tput blink)\]"
-    REVERSE="\[$(tput smso)\]"
-    UNDERLINE="\[$(tput smul)\]"
-
-    # Disable bullshit flow control
-    stty -ixon
-fi
-
-function short_numerical_sum(){
-    number=$(echo $1 | md5sum | sed 's/[^0-9]*//g')
-    number=${number:0:10}
-    echo ${number#0} | sed 's/^0*//'
-}
-
-function decorate_hostname(){
-    number=$(short_numerical_sum $HOSTNAME)
-    color=$(($number % 7 + 1))
-    number=$(short_numerical_sum $number)
-    underline=$(($number % 2 ))
-    number=$(short_numerical_sum $number)
-    bold=$(($number % 2 ))
-    if [[ "$bold" -eq 1 ]]; then
-        echo -en "$(tput bold)"
-    fi
-    if [[ "$underline" -eq 1 ]]; then
-        echo -en "$(tput smul)"
-    fi
-    echo -e "$(tput setaf ${color#-})"
 }
 
 function httpserver () {
@@ -100,8 +61,8 @@ function parse_git_age () {
     git rev-list -n1 --format="%ar" HEAD | tail -n1 | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/'
 }
 
-export PS1="${BOLD}\t ${NORMAL}[\u@\$(decorate_hostname)\h${NORMAL}${WHITE}]${BOLD}${WHITE}\$(git_ps2_string) \
-${NORMAL}${GREEN}\w\\n${BOLD}${RED}\$${NORMAL} "
+export PS1="${BOLD}\t ${NORMAL}[\u\$(decorated_hostname)${NORMAL}${WHITE}]${BOLD}${WHITE}\$(git_ps2_string) \
+${NORMAL}${GREEN}\w\\n${BOLD}${KEY_ORANGE}\$${NORMAL} "
 
 # cpp and h cscope
 alias cppscope='find . | grep -P "\.(cpp|h)$" > cppscope.files && cscope -b -i ./cppscope.files'
@@ -117,6 +78,7 @@ alias ..='cd ..'
 
 # Git aliases
 alias gits='git status'
+alias gd='git diff'
 alias gdc='git diff --cached'
 alias gdt='git difftool'
 alias gdtc='git difftool --cached'
@@ -173,55 +135,6 @@ is_in_git_repo () {
   git rev-parse HEAD > /dev/null 2>&1
 }
 
-# unalias gf
-# gf () {
-#   is_in_git_repo || return
-#   git -c color.status=always status --short |
-#   fzf-tmux -m --ansi --nth 2..,.. \
-#     --preview 'NAME="$(cut -c4- <<< {})" &&
-#                (git diff --color=always "$NAME" | sed 1,4d; cat "$NAME") | head -'$LINES |
-#   cut -c4-
-# }
 
-gb() {
-  is_in_git_repo || return
-  git branch -a --color=always | grep -v '/HEAD\s' | sort |
-  fzf-tmux --ansi --multi --tac --preview-window right:70% \
-    --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -'$LINES |
-  sed 's/^..//' | cut -d' ' -f1 |
-  sed 's#^remotes/##'
-}
 
-gt() {
-  is_in_git_repo || return
-  git tag --sort -version:refname |
-  fzf-tmux --multi --preview-window right:70% \
-    --preview 'git show --color=always {} | head -'$LINES
-}
 
-gh() {
-  is_in_git_repo || return
-  git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph |
-  fzf-tmux --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' \
-    --header 'Press CTRL-S to toggle sort' \
-    --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -'$LINES |
-  grep -o "[a-f0-9]\{7,\}"
-}
-
-# bind '"\er": redraw-current-line'
-# bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
-# bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
-# bind '"\C-g\C-t": "$(gt)\e\C-e\er"'
-# bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
-
-# fshow - git commit browser
-fshow() {
-  git log --graph --color=always \
-      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
-  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
-      --header "Press CTRL-S to toggle sort" \
-      --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
-                 xargs -I % sh -c 'git show --color=always % | head -$LINES '" \
-      --bind "enter:execute:echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
-              xargs -I % sh -c 'vim fugitive://\$(git rev-parse --show-toplevel)/.git//% < /dev/tty'"
-}
