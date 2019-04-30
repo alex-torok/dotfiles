@@ -13,13 +13,13 @@ function source_if_exists () {
 
 man() {
     env \
-    LESS_TERMCAP_mb="$(printf "\e[1;31m")" \
-    LESS_TERMCAP_md="$(printf "\e[1;31m")" \
+    LESS_TERMCAP_mb="$(printf "\e[01;14m")" \
+    LESS_TERMCAP_md="$(printf "\e[01;38;5;14m")" \
+    LESS_TERMCAP_so="$(printf "\e[01;37;1m")" \
+    LESS_TERMCAP_us="$(printf "\e[04;38;5;214m")" \
     LESS_TERMCAP_me="$(printf "\e[0m")" \
     LESS_TERMCAP_se="$(printf "\e[0m")" \
-    LESS_TERMCAP_so="$(printf "\e[1;44;33m")" \
     LESS_TERMCAP_ue="$(printf "\e[0m")" \
-    LESS_TERMCAP_us="$(printf "\e[1;32m")" \
     man "${@}"
 }
 
@@ -91,17 +91,6 @@ alias git-authors='git ls-tree -r -z --name-only HEAD -- $1 | xargs -0 -n1 git b
 
 alias xvfb='Xvfb :99 & &>/dev/null; export DISPLAY=:99'
 
-function scpi {
-    if [ $# -eq 1 ]
-    then
-         unit=--5800
-    else
-         unit=$2
-    fi
-    port=`getport --ip $1 $unit --noout`
-    scpiclient --ip $1 --port $port
-}
-
 . $HOME/.shellrc.load
 
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
@@ -118,12 +107,18 @@ ninja_target_fzf() {
   fi
 
   ninja -t targets all | cut -d: -f1 |
-  fzf-tmux
+  fzf-tmux --format=reverse
+}
+
+directory_fzf() {
+    find -type d | fzf-tmux
 }
 
 # Binds
 if [[ $- =~ i ]]; then
     bind '"\C-g\C-n": "$(ninja_target_fzf)\e\C-e\er"'
+    bind '"\C-g\C-d": "cd $(directory_fzf)\e\C-e\er\n"'
+    bind '"\C-g\C-r": "source ~/.bashrc\n"'
     bind -x '"\C-g\C-p": pet-select'
 fi
 

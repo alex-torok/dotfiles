@@ -15,9 +15,10 @@ function print_working_copy_branches {
 
 working_copy_fzf() {
     dir=$(print_working_copy_branches |
-          fzf --ansi |
+          fzf --layout=reverse --ansi |
           cut -d: -f1)
     if [[ ${dir} != "" ]]; then
+        clear
         cd ~/working-copy/${dir}
     fi
 }

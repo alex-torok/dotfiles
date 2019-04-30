@@ -58,6 +58,7 @@ Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 
+Plug 'tyru/current-func-info.vim'
 " Colorschemes! 
 Plug 'bcicen/vim-vice'
 Plug 'tomasr/molokai'
@@ -97,14 +98,15 @@ let g:ale_linters = {
 \ 'python': ['pyflakes'],
 \ 'yaml': ['yamllint'],
 \ 'dockerfile': ['hadolint'],
-\ 'tcl': ['nagelfar'],
 \ 'cpp': ['cppcheck', 'clangcheck', 'flawfinder'] }
 
 let g:ale_c_build_dir_names = ["build/mts-5800-app-arm-cortex-a9"]
+
 let g:ale_tcl_nagelfar_executable = "nagelfar"
 " Disable Warnings and 'N'? errors
 let g:ale_tcl_nagelfar_options = "-filter '*N *' -filter '*W *'"
-autocmd FileType tcl setlocal ale_open_list = 1
+autocmd FileType tcl let b:ale_open_list = 1
+let g:ale_list_window_size = 5
 
 nmap <silent> ]w <Plug>(ale_next_wrap)
 nmap <silent> [w <Plug>(ale_previous_wrap)
@@ -159,6 +161,7 @@ command! FZFGFiles :call fzf#run({
 nnoremap <Leader>o :Files<cr>
 nnoremap <Leader>b :Buffers<cr>
 nnoremap <Leader>r :FilesMru<cr>
+nnoremap <Leader>l :Lines<cr>
 " }}}
 " Vimux {{{
 nnoremap <Leader>r :VimuxRunLastCommand<CR>
@@ -241,7 +244,7 @@ nnoremap <Leader>m :NERDTreeToggle<CR>
 " Semantic colors {{{
 
 let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,11,13,15,46,51,199]
-nnoremap <Leader>s :SemanticHighlightToggle<cr>
+" nnoremap <Leader>s :SemanticHighlightToggle<cr>
 " }}}
 " Search settings {{{
 set incsearch
