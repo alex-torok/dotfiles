@@ -55,10 +55,11 @@ function git_ps2_string () {
     echo " ($(parse_git_branch) - $(parse_git_age))"
 }
 function parse_git_branch () {
-    __git_ps1 | sed -r 's_ \((.+)\)_\1_'
+    __git_ps1 "%s"
 }
 function parse_git_age () {
-    git rev-list -n1 --format="%ar" HEAD | tail -n1 | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/'
+    commit_relative_time=$(git rev-list -n1 --format="%cr" HEAD | tail -n1 | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/')
+    echo $commit_relative_time
 }
 
 export PS1="${BOLD}\t ${NORMAL}[\u\$(decorated_hostname)${NORMAL}${WHITE}]${BOLD}${WHITE}\$(git_ps2_string) \
