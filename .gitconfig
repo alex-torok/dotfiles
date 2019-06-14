@@ -1,6 +1,5 @@
-[user]
-    name = Alex Torok
-    email = Alex.Torok@viavisolutions.com
+[include]
+    path = ~/.gituserconfig
 [push]
     default = simple
 [merge]
