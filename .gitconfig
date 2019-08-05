@@ -16,7 +16,7 @@
     autosetuprebase = always
 [core]
     editor = vim
-    excludesfile = /home/tor59451/.gitignore
+    excludesfile = ~/.gitignore
 # [color "diff"]
 #     whitespace = red reverse
 [alias]
