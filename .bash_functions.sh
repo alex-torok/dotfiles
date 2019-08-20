@@ -6,10 +6,8 @@ function print_code_branches {
         if [ -d $dir ]; then
             git -C $dir rev-parse 2> /dev/null
             if [[ $? -eq 0 ]]; then
-                pushd $dir > /dev/null
-                branch_name=`git rev-parse --abbrev-ref HEAD 2>/dev/null`
+                branch_name=`git -C $dir rev-parse --abbrev-ref HEAD 2>/dev/null`
                 echo -e "$(basename $dir):\e[32m$branch_name \e[39m"
-                popd > /dev/null
             fi
         fi
     done
