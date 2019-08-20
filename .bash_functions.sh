@@ -1,7 +1,9 @@
 #! /bin/bash
-function print_working_copy_branches {
-    for dir in ~/working-copy/* ; do
-        if [ -d ${dir} ]; then
+code_dir="$HOME/code"
+function print_code_branches {
+    for dir in $(ls $code_dir) ; do
+        dir="$code_dir/$dir"
+        if [ -d $dir ]; then
             git -C $dir rev-parse 2> /dev/null
             if [[ $? -eq 0 ]]; then
                 pushd $dir > /dev/null
@@ -13,13 +15,13 @@ function print_working_copy_branches {
     done
 }
 
-working_copy_fzf() {
-    dir=$(print_working_copy_branches |
+code_fzf() {
+    dir=$(print_code_branches |
           fzf --layout=reverse --ansi |
           cut -d: -f1)
     if [[ ${dir} != "" ]]; then
         clear
-        cd ~/working-copy/${dir}
+        cd ${code_dir}/${dir}
     fi
 }
 
@@ -38,5 +40,6 @@ function today {
 # add a binding if we are in an interactive shell
 if [[ $- =~ i ]]; then
     bind '"\C-g\C-t": "$(today)\e\C-e"'
-    bind '"\C-g\C-w": "working_copy_fzf\n"'
+    bind '"\C-g\C-w": "code_fzf\n"'
 fi
+
