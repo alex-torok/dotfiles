@@ -151,35 +151,45 @@ source_if_exists ~/.bashrc.employer_specific
 
 export EDITOR="nvim"
 
+fzf_history_preview="grep -B1 -xhFr {2..} ~/.bash_history_dir | grep '^#' | cut -d# -f2 | sort -nr | xargs -n1 -I[] date -d@[]"
 # Search through all of the unique history files
 terminal_fzf_history() {
+    query_file=$1
     local fzf_ctrl_c_exit_code=130
     grep -hv ^\# $HISTFILE \
     | sort | uniq -c | sort -n \
     | $(__fzfcmd) --no-multi --tac --tiebreak=index \
-      --bind "ctrl-r:unix-line-discard+print-query" \
-      --preview "grep -B1 -xhFr {2..} ~/.bash_history_dir | grep '^#' | cut -d# -f2 | sort -nr | xargs -n1 -I[] date -d@[]"\
+    --bind "ctrl-r:execute(echo 1 >> $query_file; echo {q} >> $query_file)+unix-line-discard+print-query" \
+      --preview "$fzf_history_preview" \
+      --preview-window=right:28 \
     | sed "s/ *[0-9]* *//"
     echo ${PIPESTATUS[@]} | grep -q " $fzf_ctrl_c_exit_code " && echo '##########'
 }
 
 global_fzf_history() {
+    start_query="$1"
+
     grep -hrv ^\# $HOME/.bash_history_dir \
     | sort | uniq -c | sort -n \
     | $(__fzfcmd) --no-multi --tac --tiebreak=index \
       --bind "ctrl-r:unix-line-discard+print-query" \
-      --preview "grep -B1 -xhFr {2..} ~/.bash_history_dir | grep '^#' | cut -d# -f2 | sort -nr | xargs -n1 -I[] date -d@[]"\
+      --query "$start_query" \
+      --preview "$fzf_history_preview" \
+      --preview-window=right:28 \
     | sed "s/ *[0-9]* *//"
 }
 
 __fzf_history__() {
-    res=$(terminal_fzf_history)
+    exit_early_tempfile=$(mktemp)
+    res=$(terminal_fzf_history $exit_early_tempfile)
+    prev_query=$(cat $exit_early_tempfile)
     if [[ "$res" == '##########' ]]; then
-
         exit 1
-    elif [[ "$res" == "" ]]; then
-        res=$(global_fzf_history)
+    elif [[ "${prev_query}" != "" ]]; then
+		query="$(cat $exit_early_tempfile | sed -n 2p)"
+        res=$(global_fzf_history "$query")
     fi
+    rm $exit_early_tempfile
     echo $res
 }
 
