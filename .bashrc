@@ -151,7 +151,6 @@ source_if_exists ~/.bashrc.employer_specific
 
 export EDITOR="nvim"
 
-fzf_history_preview="grep -B1 -xhFr {2..} ~/.bash_history_dir | grep '^#' | cut -d# -f2 | sort -nr | xargs -n1 -I[] date -d@[]"
 # Search through all of the unique history files
 terminal_fzf_history() {
     query_file=$1
@@ -160,9 +159,9 @@ terminal_fzf_history() {
     | sort | uniq -c | sort -n \
     | $(__fzfcmd) --no-multi --tac --tiebreak=index \
     --bind "ctrl-r:execute(echo 1 >> $query_file; echo {q} >> $query_file)+unix-line-discard+print-query" \
-      --preview "$fzf_history_preview" \
-      --preview-window=right:28 \
-    | sed "s/ *[0-9]* *//"
+    --multi \
+    | sed "s/ *[0-9]* *//" \
+    | sed "s/$/;/"
     echo ${PIPESTATUS[@]} | grep -q " $fzf_ctrl_c_exit_code " && echo '##########'
 }
 
@@ -173,10 +172,10 @@ global_fzf_history() {
     | sort | uniq -c | sort -n \
     | $(__fzfcmd) --no-multi --tac --tiebreak=index \
       --bind "ctrl-r:unix-line-discard+print-query" \
+      --multi \
       --query "$start_query" \
-      --preview "$fzf_history_preview" \
-      --preview-window=right:28 \
-    | sed "s/ *[0-9]* *//"
+    | sed "s/ *[0-9]* *//" \
+    | sed "s/$/;/"
 }
 
 __fzf_history__() {
