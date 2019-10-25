@@ -32,6 +32,7 @@ source ~/.bash_functions.sh
 
 source ~/.bash/colors
 source ~/.bash/hostname_decoration
+source ~/.bash/infinite_fzf_history
 
 if [[ `uname` == 'Linux' ]]; then
     PATH="$HOME/bin/linux:$HOME/.fzf/bin:${PATH}"
@@ -73,21 +74,6 @@ alias cppscope='find . | grep -P "\.(cpp|h)$" > cppscope.files && cscope -b -i .
 alias ll='ls -l'
 alias ls='ls --color=auto'
 
-# Each shell gets it's own history file, but don't make a new one just when we re-source the bashrc
-if [[ ! "${HISTFILE}" == *'bash_history_dir'* ]]; then
-    HISTFILE="${HOME}/.bash_history_dir/$(date -u +%Y-%m-%d.%H.%M.%S)_$$"
-    export HISTFILE
-fi
-
-# Immediately update the history
-shopt -s histappend
-PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
-
-# Ignore entries with a leading space
-HISTCONTROL=ignoreboth
-# Add timestamps to the history
-HISTTIMEFORMAT="%d/%m/%y %T "
-
 # Useful shortcuts
 alias cd..='cd ..'
 alias ..='cd ..'
@@ -112,9 +98,10 @@ alias xvfb='Xvfb :99 & &>/dev/null; export DISPLAY=:99'
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="--preview '(cat -n {} || tree -C {}) 2> /dev/null | head -$LINES'"
-export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden --bind ?:toggle-preview"
 
-[ -f ~/.fzf/shell/key-bindings.bash ] && source ~/.fzf/shell/key-bindings.bash
+source_if_exists ~/.fzf/shell/key-bindings.bash
+#overwrite fzf history
+bind '"\C-r": " \C-e\C-u\C-y\ey\C-u`infinite_fzf_history`\e\C-e\er\e^"'
 
 
 ninja_target_fzf() {
@@ -151,45 +138,8 @@ source_if_exists ~/.bashrc.employer_specific
 
 export EDITOR="nvim"
 
-# Search through all of the unique history files
-terminal_fzf_history() {
-    query_file=$1
-    local fzf_ctrl_c_exit_code=130
-    grep -hv ^\# $HISTFILE \
-    | sort | uniq -c | sort -n \
-    | $(__fzfcmd) --no-multi --tac --tiebreak=index \
-    --bind "ctrl-r:execute(echo 1 >> $query_file; echo {q} >> $query_file)+unix-line-discard+print-query" \
-    --multi \
-    | sed "s/ *[0-9]* *//" \
-    | sed "s/$/;/"
-    echo ${PIPESTATUS[@]} | grep -q " $fzf_ctrl_c_exit_code " && echo '##########'
-}
 
-global_fzf_history() {
-    start_query="$1"
-
-    grep -hrv ^\# $HOME/.bash_history_dir \
-    | sort | uniq -c | sort -n \
-    | $(__fzfcmd) --no-multi --tac --tiebreak=index \
-      --bind "ctrl-r:unix-line-discard+print-query" \
-      --multi \
-      --query "$start_query" \
-    | sed "s/ *[0-9]* *//" \
-    | sed "s/$/;/"
-}
-
-__fzf_history__() {
-    exit_early_tempfile=$(mktemp)
-    res=$(terminal_fzf_history $exit_early_tempfile)
-    prev_query=$(cat $exit_early_tempfile)
-    if [[ "$res" == '##########' ]]; then
-        exit 1
-    elif [[ "${prev_query}" != "" ]]; then
-		query="$(cat $exit_early_tempfile | sed -n 2p)"
-        res=$(global_fzf_history "$query")
     fi
-    rm $exit_early_tempfile
-    echo $res
 }
 
 alias tokencurl='curl -H "Authorization: Bearer $token"'
