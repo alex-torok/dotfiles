@@ -37,6 +37,7 @@ source ~/.bash/infinite_fzf_history
 if [[ `uname` == 'Linux' ]]; then
     PATH="$HOME/bin/linux:$HOME/.fzf/bin:${PATH}"
 fi
+PATH="$HOME/go/bin:$HOME/.fzf/bin:${PATH}"
 
 function pet-select() {
   BUFFER=$(pet search --query "$READLINE_LINE")
@@ -101,7 +102,9 @@ export FZF_CTRL_T_OPTS="--preview '(cat -n {} || tree -C {}) 2> /dev/null | head
 
 source_if_exists ~/.fzf/shell/key-bindings.bash
 #overwrite fzf history
-bind '"\C-r": " \C-e\C-u\C-y\ey\C-u`infinite_fzf_history`\e\C-e\er\e^"'
+if [[ $- =~ i ]]; then
+    bind '"\C-r": " \C-e\C-u\C-y\ey\C-u`infinite_fzf_history`\e\C-e\er\e^"'
+fi
 
 
 ninja_target_fzf() {
@@ -111,6 +114,12 @@ ninja_target_fzf() {
 
   ninja -t targets all | cut -d: -f1 |
   fzf-tmux --format=reverse
+}
+
+git_branch_fzf() {
+    if git rev-parse --show-toplevel 2>&1 > /dev/null; then
+        git for-each-ref --format="%(refname)" refs/heads | cut -d/ -f3- | fzf-tmux --preview 'git lg --color=always --first-parent {}'
+    fi
 }
 
 directory_fzf() {
@@ -124,6 +133,7 @@ directory_fzf() {
 # Binds
 if [[ $- =~ i ]]; then
     bind '"\C-g\C-n": "$(ninja_target_fzf)\e\C-e\er"'
+    bind '"\C-g\C-b": "$(git_branch_fzf)\e\C-e\er"'
     bind '"\C-g\C-d": "directory_fzf\n"'
     bind '"\C-g\C-r": "source ~/.bashrc\n"'
     bind -x '"\C-g\C-p": pet-select'
@@ -137,9 +147,8 @@ is_in_git_repo () {
 source_if_exists ~/.bashrc.employer_specific
 
 export EDITOR="nvim"
+export GOPATH=~/go
+export GOROOT=~/go/go-1.14.1
+export GO111MODULE=on
 
 
-    fi
-}
-
-alias tokencurl='curl -H "Authorization: Bearer $token"'
