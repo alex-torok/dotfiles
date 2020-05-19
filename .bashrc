@@ -150,5 +150,3 @@ export EDITOR="nvim"
 export GOPATH=~/go
 export GOROOT=~/go/go-1.14.1
 export GO111MODULE=on
-
-
