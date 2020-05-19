@@ -137,9 +137,3 @@ is_in_git_repo () {
 source_if_exists ~/.bashrc.employer_specific
 
 export EDITOR="nvim"
-
-
-    fi
-}
-
-alias tokencurl='curl -H "Authorization: Bearer $token"'

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir -p ~/.bash_history_dir
+
 # Each shell gets it's own history file, but don't make a new one when we re-source the bashrc
 if [[ ! "${HISTFILE}" == *'bash_history_dir'* ]]; then
     HISTFILE="${HOME}/.bash_history_dir/$(date -u +%Y-%m-%d.%H.%M.%S)_$$"
