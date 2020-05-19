@@ -2,11 +2,11 @@
 
 # Each shell gets it's own history file, but don't make a new one when we re-source the bashrc
 if [[ ! "${HISTFILE}" == *'bash_history_dir'* ]]; then
-    HISTFILE="${HOME}/.bash_history_dir/$(date -u +%Y-%m-%d.%H.%M.%S)_$$"
+    filename=$(date -u +%Y-%m-%d.%H.%M.%S)
+    HISTFILE="${HOME}/.bash_history_dir/${filename}_$$"
     # Add something to the file so that it isn't empty
     echo \#$(date +%s) >> $HISTFILE
     echo 'source ~/.bashrc' >> $HISTFILE
-    export HISTFILE
 fi
 
 # Immediately update the history
