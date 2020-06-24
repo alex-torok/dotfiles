@@ -150,3 +150,9 @@ export EDITOR="nvim"
 export GOPATH=~/go
 export GOROOT=~/go/go-1.14.1
 export GO111MODULE=on
+
+if command -v direnv > /dev/null; then
+    eval "$(direnv hook bash)"
+else
+    echo "heads up: direnv not found on this system"
+fi
