@@ -38,6 +38,7 @@ if [[ `uname` == 'Linux' ]]; then
     PATH="$HOME/bin/linux:$HOME/.fzf/bin:${PATH}"
 fi
 PATH="$HOME/go/bin:$HOME/.fzf/bin:${PATH}"
+PATH="$HOME/bin:${PATH}"
 
 function pet-select() {
   BUFFER=$(pet search --query "$READLINE_LINE")
@@ -146,7 +147,7 @@ is_in_git_repo () {
 
 source_if_exists ~/.bashrc.employer_specific
 
-export EDITOR="nvim"
+export EDITOR="vim"
 export GOPATH=~/go
 export GOROOT=~/go/go-1.14.1
 export GO111MODULE=on
