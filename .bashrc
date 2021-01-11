@@ -46,10 +46,13 @@ source ~/.bash_functions.sh
 
 source ~/.bash/colors
 source ~/.bash/hostname_decoration
+source ~/.bash/infinite_fzf_history
 
 if [[ `uname` == 'Linux' ]]; then
-    PATH="$HOME/bin/linux:${PATH}"
+    PATH="$HOME/bin/linux:$HOME/.fzf/bin:${PATH}"
 fi
+PATH="$HOME/go/bin:$HOME/.fzf/bin:${PATH}"
+PATH="$HOME/bin:${PATH}"
 
 function pet-select() {
   BUFFER=$(pet search --query "$READLINE_LINE")
@@ -64,18 +67,21 @@ function httpserver () {
     python -m SimpleHTTPServer ${port}
 }
 
-function git_ps2_string () {
-    git rev-parse --git-dir > /dev/null 2>&1 || exit
+function git_ps1_string () {
+    git rev-parse --git-dir > /dev/null 2>&1 && \
+        git rev-parse HEAD &> /dev/null || exit
     echo " ($(parse_git_branch) - $(parse_git_age))"
 }
 function parse_git_branch () {
-    __git_ps1 | sed -r 's_ \((.+)\)_\1_'
-}
-function parse_git_age () {
-    git rev-list -n1 --format="%ar" HEAD | tail -n1 | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/'
+    __git_ps1 "%s"
 }
 
-export PS1="${BOLD}\t ${NORMAL}[\u\$(decorated_hostname)${NORMAL}${WHITE}]${BOLD}${WHITE}\$(git_ps2_string) \
+function parse_git_age () {
+    commit_relative_time=$(git rev-list -n1 --format="%cr" HEAD | tail -n1 | sed 's/^\s*//' | sed -r 's/([0-9]+) (.).+/\1\2/')
+    echo $commit_relative_time
+}
+
+export PS1="${BOLD}\t ${NORMAL}[\u\$(decorated_hostname)${NORMAL}${WHITE}]${BOLD}${WHITE}\$(git_ps1_string) \
 ${NORMAL}${GREEN}\w\\n${BOLD}${KEY_ORANGE}\$${NORMAL} "
 
 # cpp and h cscope
@@ -112,9 +118,12 @@ alias xvfb='Xvfb :99 & &>/dev/null; export DISPLAY=:99'
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="--preview '(cat -n {} || tree -C {}) 2> /dev/null | head -$LINES'"
-export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden --bind ?:toggle-preview"
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+source_if_exists ~/.fzf/shell/key-bindings.bash
+#overwrite fzf history
+if [[ $- =~ i ]]; then
+    bind '"\C-r": " \C-e\C-u\C-y\ey\C-u`infinite_fzf_history`\e\C-e\er\e^"'
+fi
 
 
 ninja_target_fzf() {
@@ -126,26 +135,43 @@ ninja_target_fzf() {
   fzf-tmux --format=reverse
 }
 
+git_branch_fzf() {
+    if git rev-parse --show-toplevel 2>&1 > /dev/null; then
+        git for-each-ref --format="%(refname)" refs/heads | cut -d/ -f3- | fzf-tmux --preview 'git lg --color=always --first-parent {}'
+    fi
+}
+
 directory_fzf() {
-    find -type d | fzf-tmux
+    dir=$(find -type d | fzf-tmux --preview 'ls {}')
+    if [[ "$dir" != "" ]]; then
+        clear
+        cd "$dir"
+    fi
 }
 
 # Binds
 if [[ $- =~ i ]]; then
     bind '"\C-g\C-n": "$(ninja_target_fzf)\e\C-e\er"'
-    bind '"\C-g\C-d": "cd $(directory_fzf)\e\C-e\er\n"'
+    bind '"\C-g\C-b": "$(git_branch_fzf)\e\C-e\er"'
+    bind '"\C-g\C-d": "directory_fzf\n"'
     bind '"\C-g\C-r": "source ~/.bashrc\n"'
     bind -x '"\C-g\C-p": pet-select'
 fi
 
 
-# GIT heart FZF - Courtesy of junegunn
-# -------------
-
 is_in_git_repo () {
   git rev-parse HEAD > /dev/null 2>&1
 }
 
+source_if_exists ~/.bashrc.employer_specific
 
+export EDITOR="vim"
+export GOPATH=~/go
+export GOROOT=~/go/go-1.14.1
+export GO111MODULE=on
 
-
+if command -v direnv > /dev/null; then
+    eval "$(direnv hook bash)"
+else
+    echo "heads up: direnv not found on this system"
+fi

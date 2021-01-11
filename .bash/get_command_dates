@@ -1,0 +1,8 @@
+#!/bin/bash
+command="$1"
+
+
+grep -B1 -xhFr "$command" ~/.bash_history_dir \
+    | grep '^#' | cut -d# -f2 \
+    | sort -n \
+    | xargs -n1 -I[] date -d @[]

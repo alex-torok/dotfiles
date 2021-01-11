@@ -1,3 +1,6 @@
+" Put plugins and dictionaries in this dir (also on Windows)
+let vimDir = '$HOME/.vim'
+let &runtimepath.=','.vimDir
 " Folding {{{
 " set foldmethod=marker
 " set foldlevel=0
@@ -29,7 +32,7 @@ Plug 'tweekmonster/fzf-filemru'
 Plug 'haya14busa/incsearch.vim'
 
 " Editing
-Plug 'w0rp/ale'
+" Plug 'w0rp/ale'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
@@ -53,11 +56,11 @@ Plug 'shime/vim-livedown'
 " Plug 'vim-airline/vim-airline-themes'
 Plug 'Yggdroot/indentLine'
 Plug 'jaxbot/semantic-highlight.vim'
-Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
+" Plug 'plasticboy/vim-markdown'
 
+Plug 'junegunn/goyo.vim'
 Plug 'tyru/current-func-info.vim'
 " Colorschemes! 
 Plug 'bcicen/vim-vice'
@@ -81,7 +84,9 @@ Plug 'AndrewRadev/linediff.vim'
 Plug 'tpope/vim-eunuch'
 " Plug 'junegunn/vim-peekaboo'
 
-" Code Syntaxes
+" Code Syntaxes / Languages
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'on': [] }
+Plug 'sheerun/vim-polyglot'
 Plug 'mfukar/robotframework-vim'
 Plug 'nickhutchinson/vim-cmake-syntax'
 Plug 'martinda/Jenkinsfile-vim-syntax'
@@ -98,14 +103,15 @@ let g:ale_linters = {
 \ 'python': ['pyflakes'],
 \ 'yaml': ['yamllint'],
 \ 'dockerfile': ['hadolint'],
-\ 'cpp': ['cppcheck', 'clangcheck', 'flawfinder'] }
+\ 'cpp': ['cppcheck', 'clangcheck', 'flawfinder'],
+\ 'bash': ['shellcheck'] }
 
 let g:ale_c_build_dir_names = ["build/mts-5800-app-arm-cortex-a9"]
+let g:ale_open_list = 1
 
 let g:ale_tcl_nagelfar_executable = "nagelfar"
 " Disable Warnings and 'N'? errors
 let g:ale_tcl_nagelfar_options = "-filter '*N *' -filter '*W *'"
-autocmd FileType tcl let b:ale_open_list = 1
 let g:ale_list_window_size = 5
 
 nmap <silent> ]w <Plug>(ale_next_wrap)
@@ -209,8 +215,10 @@ let g:molokai_original = 1
 
 color molokai
 " }}}
+" indentline {{{
+let g:indentLine_setConceal = 0
+" }}}
 " vim-markdown {{{
-let g:vim_markdown_conceal = 0
 let g:vim_markdown_folding_disabled = 1
 " }}}
 " a.vim {{{
@@ -227,19 +235,44 @@ autocmd VimEnter * :nunmap <Space>ih
 " }}}
 " Autosave {{{
 
+set updatetime=750
+
 let g:auto_save_silent = 1
+let g:auto_save_no_updatetime = 1
 let g:auto_save = 1
 let g:auto_save_in_insert_mode = 0
+
 " }}}
-" NERDTree {{{
+" vim-go {{{
+"
+" " vim-go automatically format imports whenever the file is saved
+let g:go_fmt_command = "gofmt"
+" vim-go linting setup
 
-let NERDTreeShowHidden=1
+let g:go_asmfmt_autosave = 0
+let g:go_metalinter_autosave = 0
+let g:go_fmt_autosave = 0
+let g:go_mod_fmt_autosave = 0
 
-" Quit vim if NERDTree is the only buffer
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+let g:go_search_bin_path_first = 1
 
-nnoremap <Leader>f :NERDTreeFind<CR>
-nnoremap <Leader>m :NERDTreeToggle<CR>
+let g:go_metalinter_command = 'gometalinter'
+let g:go_metalinter_enabled = []
+let g:go_metalinter_deadline = "500ms"
+" vim-go color setup
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+
+
+" let g:go_fmt_autosave = 0
+" let g:go_metalinter_autosave = 0
+" let g:go_mod_fmt_autosave = 0
+" let g:go_fmt_command = ""
+" let g:go_metalinter_enabled = []
+" let g:go_fmt_fail_silently = 1
+
+autocmd FileType go nnoremap <Leader>f :GoFmt<CR>
 " }}}
 " Semantic colors {{{
 
@@ -263,6 +296,11 @@ map #  <Plug>(incsearch-nohl-#)
 map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
 " }}}
+" NVim Settings {{{
+set concealcursor="nc"
+set conceallevel=0
+
+" " }}}
 " Vim Settings {{{
 " autocomplete in the command menu
 set wildmenu
@@ -270,7 +308,7 @@ set wildchar=<Tab>
 set wildmode=full
 
 " show vertical line at 81 characters
-set colorcolumn=80
+set colorcolumn=120
 
 " 4 spaces for indentation
 set tabstop=4
@@ -302,7 +340,7 @@ set listchars=tab:▸-,precedes:←,extends:→,nbsp:·,trail:•
 set nowrap
 set sidescroll=5
 
-set nocompatible " Disable vi-compatability
+set nocompatible " Disable vi-compatibility
 set encoding=utf-8
 set t_Co=256
 syntax enable
@@ -323,7 +361,7 @@ set number
 set mouse=a
 if &term =~ '^screen'
     " tmux knows the extended mouse mode
-    set ttymouse=xterm2
+    " set ttymouse=xterm2
 endif
 
 " split views go below or to the right
@@ -332,6 +370,11 @@ set splitbelow
 
 " create swap files every 10 keystrokes
 set updatecount=10
+
+" Lets try using spellcheck
+set spell spelllang=en_us
+set spellfile=~/.vim/spell/en.utf-8.add
+
 " }}}
 " Keybinds {{{
 
@@ -386,6 +429,39 @@ if has('persistent_undo')
 endif
 
 " }}}
+" bonsai wrap
+function! s:goyo_enter()
+  let b:quitting = 0
+  let b:quitting_bang = 0
+  set tw=0
+  autocmd QuitPre <buffer> let b:quitting = 1
+  cabbrev <buffer> q! let b:quitting_bang = 1 <bar> q!
+endfunction
+
+function! s:goyo_leave()
+  " Quit Vim if this is the only remaining buffer
+  if b:quitting && len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
+    if b:quitting_bang
+      qa!
+    else
+      qa
+    endif
+  endif
+endfunction
+
+augroup bonsai_ft
+  au!
+  autocmd BufNewFile,BufRead *-bonsai-review.txt set wrap linebreak nolist
+  autocmd BufNewFile,BufRead *-bonsai-review.txt nnoremap <buffer> <silent> j :normal! gj<CR>
+  autocmd BufNewFile,BufRead *-bonsai-review.txt nnoremap <buffer> <silent> k :normal! gk<CR>
+  autocmd BufNewFile,BufRead *-bonsai-review.txt Goyo 100x90%
+  autocmd BufNewFile,BufRead *-bonsai-review.txt setf markdown
+
+  autocmd! User GoyoEnter call <SID>goyo_enter()
+  autocmd! User GoyoLeave call <SID>goyo_leave()
+augroup END
+
+" }}}
 " cscope {{{
 source ~/.cscope_maps.vim
 " }}}
@@ -398,7 +474,7 @@ autocmd BufNewFile,BufRead Jenkinsfile* set ft=Jenkinsfile
 
 au BufRead,BufNewFile grains set syntax=yaml
 
-autocmd FileType markdown setlocal textwidth=80
+autocmd FileType markdown setlocal textwidth=120
 autocmd FileType markdown setlocal wrapmargin=2
 
 " Highlight cursorline only in active window
@@ -413,7 +489,6 @@ aug END
 "Markdown settings
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
-let g:markdown_syntax_conceal = 0
 
 " }}}
 " clang-format {{{

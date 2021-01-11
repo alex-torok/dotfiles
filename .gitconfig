@@ -1,6 +1,5 @@
-[user]
-    name = Alex Torok
-    email = Alex.Torok@viavisolutions.com
+[include]
+    path = ~/.gituserconfig
 [push]
     default = simple
 [merge]
@@ -17,7 +16,7 @@
     autosetuprebase = always
 [core]
     editor = vim
-    excludesfile = /home/tor59451/.gitignore
+    excludesfile = ~/.gitignore
 # [color "diff"]
 #     whitespace = red reverse
 [alias]
@@ -49,9 +48,9 @@
   cmd = icdiff --line-numbers $LOCAL $REMOTE
 
 [pager]
-    log = ~/third-party/diff-highlight | less
-    show = ~/third-party/diff-highlight | less
-    diff = ~/third-party/diff-highlight | less
+    log = ~/third-party/diff-so-fancy | less --tabs=4 -RFX
+    show = ~/third-party/diff-so-fancy | less --tabs=4 -RFX
+    diff = ~/third-party/diff-so-fancy | less --tabs=4 -RFX
     difftool = less -r
 [stash]
     showPatch = true
