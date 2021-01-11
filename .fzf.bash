@@ -1,20 +1,20 @@
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == */home/tor59451/.fzf/bin* ]]; then
+if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
   export PATH="$PATH:/home/tor59451/.fzf/bin"
 fi
 
 # Man path
 # --------
-if [[ ! "$MANPATH" == */home/tor59451/.fzf/man* && -d "/home/tor59451/.fzf/man" ]]; then
-  export MANPATH="$MANPATH:/home/tor59451/.fzf/man"
+if [[ ! "$MANPATH" == *$HOME/.fzf/man* && -d "$HOME/.fzf/man" ]]; then
+  export MANPATH="$MANPATH:$HOME/.fzf/man"
 fi
 
 # Auto-completion
 # ---------------
-[[ $- == *i* ]] && source "/home/tor59451/.fzf/shell/completion.bash" 2> /dev/null
+[[ $- == *i* ]] && source "$HOME/.fzf/shell/completion.bash" 2> /dev/null
 
 # Key bindings
 # ------------
-source "/home/tor59451/.fzf/shell/key-bindings.bash"
+source "$HOME/.fzf/shell/key-bindings.bash"
 

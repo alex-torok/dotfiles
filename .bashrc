@@ -1,3 +1,17 @@
+
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    CYGWIN*)    machine=Cygwin;;
+    MINGW*)     machine=MinGw;;
+    *)          machine="UNKNOWN:${unameOut}"
+esac
+
+if [[ $machine == Mac ]]; then
+    alias md5sum=md5
+fi
+
 function source_if_exists () {
     [ -f $1 ] && source $1
 }
@@ -68,7 +82,9 @@ ${NORMAL}${GREEN}\w\\n${BOLD}${KEY_ORANGE}\$${NORMAL} "
 alias cppscope='find . | grep -P "\.(cpp|h)$" > cppscope.files && cscope -b -i ./cppscope.files'
 
 alias ll='ls -l'
-alias ls='ls --color=auto'
+if [[ $machine != Mac ]]; then
+    alias ls='ls --color=auto'
+fi
 # Add timestamps to the history
 HISTTIMEFORMAT="%d/%m/%y %T "
 
